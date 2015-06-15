@@ -25,6 +25,10 @@ struct Settings {
     double stitchXcorrOffset;
     double xdisp;
     double ydisp;
+
+    int tempXcorrMinPict;
+    int tempXcorrMaxPict;
+    int tempXcorrMaxX;
 };
 
 Settings getSettings(const std::string settingsFile);

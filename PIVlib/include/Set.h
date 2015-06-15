@@ -63,6 +63,8 @@ namespace PIV
         PIV::Frame calculateAvgField();
         
         void tecplotOut(std::string fileName);
+
+        void timeXcorr();
     };
 }
 

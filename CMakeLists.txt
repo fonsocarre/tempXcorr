@@ -10,7 +10,6 @@ include_directories("include" ${CMAKE_CURRENT_SOURCE_DIR} PIVlib/include)
 #add_library( hdf5 SHARED IMPORTED )
 # You can define two import-locations: one for debug and one for release.
 #set_target_properties( hdf5 PROPERTIES IMPORTED_LOCATION /usr/local/lib )
-FIND_LIBRARY(RESULT libhdf5.a PATHS /usr/local/lib)
 # for the PIV lib
 add_subdirectory("PIVlib")
 
@@ -21,12 +20,12 @@ IF (Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
     ADD_DEFINITIONS( "-DHAS_BOOST" )
 ENDIF()
-SET( CMAKE_CXX_FLAGS -std=c++11 )
+SET( CMAKE_CXX_FLAGS -std=c++14 )
 #set(BOOST_ROOT "/usr/local/boost")
 #find_package( Boost lexical_cast property_tree)
 #include_directories( ${Boost_INCLUDE_DIRS} )
 
-target_link_libraries(PIVlib)
+link_directories(/usr/local/lib)
 add_subdirectory(src)
 
 set_target_properties( txcorr PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/bin )

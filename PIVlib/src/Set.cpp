@@ -377,8 +377,49 @@ void PIV::Set::tecplotOut(std::string fileName)
 }
 
 
+void PIV::Set::timeXcorr()
+{
+    int pict0 = settings.tempXcorrMinPict;
+    this->retrievePicture(pict0);
+    
+    // Ugly parameters
+    int xmin = 1;
+    int ymin = 0;
+    int ymax = 0;
+    int expon = 2;
+    double offset = 11.6;
+    //==================
+    
+    int nx = this->container[pict0].frames[0].nx;
+    int ny = this->container[pict0].frames[0].ny;
 
+    std::vector<int> xdisps(settings.tempXcorrMaxX, 0);
+    std::vector<int> ydisps(settings.tempXcorrMaxX, 0);
+    std::vector<double> corrVal(settings.tempXcorrMaxX, 0.0);
 
+    for (int iPict=pict0+1;
+         iPict<settings.tempXcorrMaxPict;
+         ++iPict)
+    {
+        this->retrievePicture(iPict);
+        
+        tempXcorr(&(this->container[pict0].frames[0].vx[0]),
+                  &(this->container[iPict].frames[0].vx[0]),
+                  &(xmin),
+                  &(settings.tempXcorrMaxX),
+                  &(ymin),
+                  &(ymax),
+                  &(offset),
+                  &(expon),
+                  &(ny),
+                  &(nx),
+                  &(xdisps[0]),
+                  &(ydisps[0]),
+                  &(corrVal[0]));
+
+        this->removePicture(iPict);
+    }
+}
 
 
 

@@ -1,3 +1,10 @@
 file(GLOB txcorr_SRC *.cpp)
-#add_library(PIVlib ${PIVlib_SRC} )
+
+#add_library( hdf5_cpp SHARED IMPORTED )
+#set_target_properties( hdf5_cpp PROPERTIES IMPORTED_LOCATION /usr/local/lib )
+#add_library( hdf5 SHARED IMPORTED )
+#set_target_properties( hdf5 PROPERTIES IMPORTED_LOCATION /usr/local/lib )
+set(HDF5_LIB_DIR /usr/local/lib/)
 add_executable(txcorr ${txcorr_SRC})
+target_link_libraries(txcorr PIVlib hdf5 hdf5_cpp)
+link_directories(/usr/local/lib)

@@ -93,6 +93,40 @@ module xCorrModule
                                             ! but it gives problems with cylinder
         end if
     end subroutine xCorr
+    
+    subroutine tempXcorr(tmat0, tmat1, xmin, xmax, ymin, ymax, offset, expon,&
+                            nRows, nCols, xdisp, ydisp, corrVal) bind(c)
+        integer(c_int), intent(IN)      :: nRows
+        integer(c_int), intent(IN)      :: nCols
+        integer(c_int), intent(IN)      :: xmin
+        integer(c_int), intent(IN)      :: xmax
+        integer(c_int), intent(IN)      :: ymin
+        integer(c_int), intent(IN)      :: ymax
+        real(c_double), intent(IN)      :: offset
+        integer(c_int), intent(IN)      :: expon
+        real(c_double), intent(IN)      :: tmat0(nRows*nCols)
+        real(c_double), intent(IN)      :: tmat1(nRows*nCols)
+        integer(c_int), intent(OUT)     :: xdisp(xmax)
+        integer(c_int), intent(OUT)     :: ydisp(xmax) ! TODO ydisp not implemented
+        real(c_double), intent(OUT)     :: corrVal(xmax)
+
+        real(c_double)                  :: mat0(nRows, nCols)
+        real(c_double)                  :: mat1(nRows, nCols)
+
+        integer                         :: i,j
+
+        mat0 = transpose(reshape(tmat0, [nCols, nRows]))
+        mat1 = transpose(reshape(tmat1, [nCols, nRows]))
+
+        mat0 = (max(mat0,offset) - offset)**expon
+        mat1 = (max(mat1,offset) - offset)**expon
+
+        do j=1, xmax
+            xdisp(i) = i
+            corrVal = conv(mat0, mat1, nRows, nCols, i, 0_c_int)
+        end do
+
+    end subroutine tempXcorr
 
     function conv(matL, matR, nRows, nCols, xdisp, ydisp)
         real(c_double)              :: conv
