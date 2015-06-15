@@ -37,3 +37,8 @@ install_manifest.txt
 # binary stuff
 */bin/
 */build/
+
+# Other stuff from OSX
+*.un~
+.DS_Store
+
