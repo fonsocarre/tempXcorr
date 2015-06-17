@@ -26,22 +26,22 @@ ARCHITECTURE_ID	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	390;
 ARCHITECTURE_ID	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	393;"	d	file:
 ARCHITECTURE_ID	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	396;"	d	file:
 ARCHITECTURE_ID	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	400;"	d	file:
-CMAKE_BINARY_DIR	PIVlib/Stitchutils/lib/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
 CMAKE_BINARY_DIR	build/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
 CMAKE_BINARY_DIR	build/PIVlib/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
 CMAKE_BINARY_DIR	build/PIVlib/StitchUtils/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
+CMAKE_BINARY_DIR	build/PIVlib/StitchUtils/src/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
 CMAKE_BINARY_DIR	build/PIVlib/src/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
 CMAKE_BINARY_DIR	build/src/Makefile	/^CMAKE_BINARY_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr\/build"$/;"	m
-CMAKE_COMMAND	PIVlib/Stitchutils/lib/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/PIVlib/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/PIVlib/StitchUtils/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
+CMAKE_COMMAND	build/PIVlib/StitchUtils/src/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/PIVlib/src/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
 CMAKE_COMMAND	build/src/Makefile	/^CMAKE_COMMAND = \/usr\/local\/bin\/cmake$/;"	m
-CMAKE_SOURCE_DIR	PIVlib/Stitchutils/lib/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMAKE_SOURCE_DIR	build/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMAKE_SOURCE_DIR	build/PIVlib/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMAKE_SOURCE_DIR	build/PIVlib/StitchUtils/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
+CMAKE_SOURCE_DIR	build/PIVlib/StitchUtils/src/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMAKE_SOURCE_DIR	build/PIVlib/src/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMAKE_SOURCE_DIR	build/src/Makefile	/^CMAKE_SOURCE_DIR = "\/Users\/alfonsocarre\/Google Drive\/Project\/Code\/tempXcorr"$/;"	m
 CMakeFortranCompilerId	build/CMakeFiles/3.2.2/CompilerIdFortran/CMakeFortranCompilerId.F	/^      PROGRAM CMakeFortranCompilerId$/;"	p
@@ -255,10 +255,10 @@ Coord_type	PIVlib/include/PIV_Stitch.h	/^typedef K::FT                          
 DEC	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	409;"	d	file:
 DEC	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	404;"	d	file:
 Delaunay_triangulation	PIVlib/include/PIV_Stitch.h	/^typedef CGAL::Delaunay_triangulation_2<K>             Delaunay_triangulation;$/;"	t
-EQUALS	PIVlib/Stitchutils/lib/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/PIVlib/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/PIVlib/StitchUtils/Makefile	/^EQUALS = =$/;"	m
+EQUALS	build/PIVlib/StitchUtils/src/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/PIVlib/src/Makefile	/^EQUALS = =$/;"	m
 EQUALS	build/src/Makefile	/^EQUALS = =$/;"	m
 Frame	PIVlib/include/Frame.h	/^    class Frame$/;"	c	namespace:PIV
@@ -340,16 +340,16 @@ Picture	PIVlib/src/Picture.cpp	/^PIV::Picture::Picture()$/;"	f	class:PIV::Pictur
 Picture	PIVlib/src/Picture.cpp	/^PIV::Picture::Picture(int iPicture, const H5File& file)$/;"	f	class:PIV::Picture
 Picture	PIVlib/src/Picture.cpp	/^PIV::Picture::Picture(int iPicture, int nFrames)$/;"	f	class:PIV::Picture
 Point	PIVlib/include/PIV_Stitch.h	/^typedef K::Point_2                                    Point;$/;"	t
-RM	PIVlib/Stitchutils/lib/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
 RM	build/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
 RM	build/PIVlib/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
 RM	build/PIVlib/StitchUtils/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
+RM	build/PIVlib/StitchUtils/src/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
 RM	build/PIVlib/src/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
 RM	build/src/Makefile	/^RM = \/usr\/local\/bin\/cmake -E remove -f$/;"	m
-SHELL	PIVlib/Stitchutils/lib/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/PIVlib/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/PIVlib/StitchUtils/Makefile	/^SHELL = \/bin\/sh$/;"	m
+SHELL	build/PIVlib/StitchUtils/src/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/PIVlib/src/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SHELL	build/src/Makefile	/^SHELL = \/bin\/sh$/;"	m
 SIMULATE_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	155;"	d	file:
@@ -370,10 +370,10 @@ SIMULATE_VERSION_MINOR	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	33;
 SIMULATE_VERSION_MINOR	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	165;"	d	file:
 SIMULATE_VERSION_MINOR	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	180;"	d	file:
 SIMULATE_VERSION_MINOR	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	38;"	d	file:
-SUFFIXES	PIVlib/Stitchutils/lib/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/PIVlib/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/PIVlib/StitchUtils/Makefile	/^SUFFIXES =$/;"	m
+SUFFIXES	build/PIVlib/StitchUtils/src/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/PIVlib/src/Makefile	/^SUFFIXES =$/;"	m
 SUFFIXES	build/src/Makefile	/^SUFFIXES =$/;"	m
 Set	PIVlib/include/Set.h	/^    class Set$/;"	c	namespace:PIV
@@ -382,6 +382,7 @@ Set	PIVlib/src/Set.cpp	/^PIV::Set::Set(std::string fileName): file(fileName, H5F
 Settings	PIVlib/include/getSettings.h	/^struct Settings {$/;"	s
 Traits	PIVlib/include/PIV_Stitch.h	/^typedef CGAL::Interpolation_traits_2<K>               Traits;$/;"	t
 calculateAvgField	PIVlib/src/Set.cpp	/^PIV::Frame PIV::Set::calculateAvgField()$/;"	f	class:PIV::Set
+calculatexcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    function calculatexcorr(/;"	f	module:xCorrModule
 checkNaN	PIVlib/Stitchutils/src/interpolationModule.f90	/^function checkNaN(/;"	f	module:interpolationModule
 closeFile	PIVlib/src/Set.cpp	/^void PIV::Set::closeFile()$/;"	f	class:PIV::Set
 container	PIVlib/include/Set.h	/^        std::map<int, PIV::Picture> container;$/;"	m	class:PIV::Set
@@ -433,6 +434,8 @@ main	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^int main(int 
 main	build/CMakeFiles/feature_tests.c	/^int main(int argc, char** argv) { (void)argv; return features[argc]; }$/;"	f
 main	build/CMakeFiles/feature_tests.cxx	/^int main(int argc, char** argv) { (void)argv; return features[argc]; }$/;"	f
 main	src/main.cpp	/^int main()$/;"	f
+maxN	PIVlib/include/getSettings.h	/^    int maxN;$/;"	m	struct:Settings
+maxR	PIVlib/include/getSettings.h	/^    int maxR;$/;"	m	struct:Settings
 maxXdisp	PIVlib/include/getSettings.h	/^    double maxXdisp;$/;"	m	struct:Settings
 middleInterpolation	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine middleInterpolation(/;"	s	module:interpolationModule
 n	PIVlib/include/Frame.h	/^        int n;$/;"	m	class:PIV::Frame
@@ -465,6 +468,11 @@ substractFrame	PIVlib/src/Picture.cpp	/^void PIV::Picture::substractFrame(PIV::F
 t	PIVlib/include/Picture.h	/^        double t;$/;"	m	class:PIV::Picture
 tecplotOut	PIVlib/src/Set.cpp	/^void PIV::Set::tecplotOut(std::string fileName)$/;"	f	class:PIV::Set
 tempXcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine tempXcorr(/;"	s	module:xCorrModule
+tempXcorrMaxPict	PIVlib/include/getSettings.h	/^    int tempXcorrMaxPict;$/;"	m	struct:Settings
+tempXcorrMaxX	PIVlib/include/getSettings.h	/^    int tempXcorrMaxX;$/;"	m	struct:Settings
+tempXcorrMinPict	PIVlib/include/getSettings.h	/^    int tempXcorrMinPict;$/;"	m	struct:Settings
+tempXcorrn	PIVlib/include/getSettings.h	/^    int tempXcorrn;$/;"	m	struct:Settings
+timeXcorr	PIVlib/src/Set.cpp	/^void PIV::Set::timeXcorr()$/;"	f	class:PIV::Set
 transferMesh1	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine transferMesh1(/;"	s	module:interpolationModule
 unload	PIVlib/src/Frame.cpp	/^void PIV::Frame::unload(H5::H5File& file, std::string groupName)$/;"	f	class:PIV::Frame
 unload	PIVlib/src/Picture.cpp	/^void PIV::Picture::unload(H5File& file, std::string groupName)$/;"	f	class:PIV::Picture

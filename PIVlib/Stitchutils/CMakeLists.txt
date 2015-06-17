@@ -50,7 +50,7 @@ ENDIF(FCNAME STREQUAL "pgf90")
 #SET(FOOEXE foo)
 
 # Define the library name
-SET(stitchUtilsLib stitchUtils)
+SET(stitchUtils stitchUtils)
 
 # Define some directories
 SET(SRC ${CMAKE_CURRENT_LIST_DIR}/src)
@@ -59,10 +59,10 @@ SET(LIB ${CMAKE_CURRENT_LIST_DIR}/lib)
 #SET(SRCFOO ${SRC}/foo)
 
 # Have the .mod files placed in the lib folder
-SET(CMAKE_Fortran_MODULE_DIRECTORY ${LIB})
+#SET(CMAKE_Fortran_MODULE_DIRECTORY ${LIB})
 
 # The source for the BAR library and have it placed in the lib folder
-ADD_SUBDIRECTORY(${SRC} ${LIB})
+ADD_SUBDIRECTORY(${SRC})
 
 # Add a distclean target to the Makefile
 ADD_CUSTOM_TARGET(distclean 

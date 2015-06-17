@@ -20,11 +20,11 @@ IF (Boost_FOUND)
     INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
     ADD_DEFINITIONS( "-DHAS_BOOST" )
 ENDIF()
-SET( CMAKE_CXX_FLAGS -std=c++14 )
+SET( CMAKE_CXX_FLAGS -std=c++14)
 #set(BOOST_ROOT "/usr/local/boost")
 #find_package( Boost lexical_cast property_tree)
 #include_directories( ${Boost_INCLUDE_DIRS} )
-
+SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/opt/intel/composer_xe_2015.3.187/compiler/lib/ -lifcore -lifcoremt -limf")
 link_directories(/usr/local/lib)
 add_subdirectory(src)
 

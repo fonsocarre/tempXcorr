@@ -9,7 +9,7 @@
 #include "getSettings.h"
 
 Settings settings = getSettings(
-    "/Users/alfonsocarre/Google Drive/Project/Code/Stitch/Stitch/settings.ini");
+    "../settings.ini");
 
 
 Settings getSettings(const std::string settingsFile)
@@ -50,8 +50,22 @@ Settings getSettings(const std::string settingsFile)
     //    output.separationAngle = boost::lexical_cast<double>(pt.get<std::string>
     //                                                ("DVM.separationAngle"));
     //    output.separationAngle *= (constants::PI/180.);
-    //    output.simulationTime = boost::lexical_cast<double>(pt.get<std::string>
-    //                                                ("DVM.simulationTime"));
+        output.tempXcorrMinPict = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.tempXcorrMinPict"));
+        output.tempXcorrMaxPict = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.tempXcorrMaxPict"));
+        output.tempXcorrMaxX = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.tempXcorrMaxX"));
+        output.tempXcorrn = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.tempXcorrn"));
+        output.maxN = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.maxN"));
+        output.maxR = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.maxR"));
+        output.deltaR = boost::lexical_cast<int>(pt.get<std::string>
+                                                    ("Settings.deltaR"));
+        output.minX = boost::lexical_cast<double>(pt.get<std::string>
+                                                    ("Settings.minX"));
     //    output.dxsdys.resize(constants::DIM);
     //    output.dxsdys[0] = boost::lexical_cast<double>(pt.get<std::string>
     //                                                ("DVM.dxs"));

@@ -20,6 +20,7 @@
 #include "Frame.h"
 #include "Picture.h"
 #include "getSettings.h"
+#include "xCorrModule.h"
 
 #include "H5Cpp.h"
 #ifndef H5_NO_NAMESPACE

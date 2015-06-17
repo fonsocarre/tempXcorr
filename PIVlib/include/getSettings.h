@@ -29,6 +29,12 @@ struct Settings {
     int tempXcorrMinPict;
     int tempXcorrMaxPict;
     int tempXcorrMaxX;
+    int tempXcorrn;
+
+    int maxN;
+    int maxR;
+    int deltaR;
+    double minX;
 };
 
 Settings getSettings(const std::string settingsFile);

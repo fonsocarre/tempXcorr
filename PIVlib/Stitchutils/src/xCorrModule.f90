@@ -106,8 +106,8 @@ module xCorrModule
         integer(c_int), intent(IN)      :: expon
         real(c_double), intent(IN)      :: tmat0(nRows*nCols)
         real(c_double), intent(IN)      :: tmat1(nRows*nCols)
-        integer(c_int), intent(OUT)     :: xdisp(xmax)
-        integer(c_int), intent(OUT)     :: ydisp(xmax) ! TODO ydisp not implemented
+        integer(c_int), intent(INOUT)     :: xdisp(xmax)
+        integer(c_int), intent(INOUT)     :: ydisp(xmax) ! TODO ydisp not implemented
         real(c_double), intent(OUT)     :: corrVal(xmax)
 
         real(c_double)                  :: mat0(nRows, nCols)
@@ -122,8 +122,9 @@ module xCorrModule
         mat1 = (max(mat1,offset) - offset)**expon
 
         do j=1, xmax
-            xdisp(i) = i
-            corrVal = conv(mat0, mat1, nRows, nCols, i, 0_c_int)
+            xdisp(j) = j
+            corrVal(j) = conv(mat0, mat1, nRows, nCols, j, 0_c_int)
+            print*, xdisp(j), corrVal(j)
         end do
 
     end subroutine tempXcorr
@@ -161,9 +162,59 @@ module xCorrModule
             print*, "    jmaxL-jminL = ", jmaxL-jminL
             stop
         end if
-
+        !print*, "    jmaxR, jminR = ", jmaxR,jminR
+        !print*, "    jmaxL,jminL = ", jmaxL,jminL
+        !read(*,*)
         conv = sum(matL(iminL:imaxL, jminL:jmaxL)*&
                    matR(iminR:imaxR, jminR:jmaxR))
     end function conv
 
+    function calculatexcorr(tmat0, tmat1, nRows, nCols, xdisp, expon, offset, jmin)&
+                                    result(xcorr) bind(c)
+        real(c_double), intent(IN)          :: tmat0(nRows*nCols)
+        real(c_double), intent(IN)          :: tmat1(nRows*nCols)
+        integer(c_int), intent(IN)          :: nRows
+        integer(c_int), intent(IN)          :: nCols
+        integer(c_int), intent(IN)          :: xdisp
+        integer(c_int), intent(IN)          :: expon
+        real(c_double), intent(IN)          :: offset
+        integer(c_int), intent(IN)          :: jmin
+
+        real(c_double)                      :: xcorr
+
+        real(c_double)                      :: mat0(nRows, nCols)
+        real(c_double)                      :: mat1(nRows, nCols)
+
+        real(c_double)                      :: mat00(nRows, nCols-jmin)
+        real(c_double)                      :: mat11(nRows, nCols-jmin)
+        
+        integer                             :: nx, ny
+        integer                             :: x2 = 47
+
+        mat0 = transpose(reshape(tmat0, [nCols, nRows]))
+        mat1 = transpose(reshape(tmat1, [nCols, nRows]))
+
+        !mat0 = (max(mat0,offset) - offset)**expon
+        !mat1 = (max(mat1,offset) - offset)**expon
+        !print*, "nCols = ", nCols
+        !print*, "size(mat0(1,:))=", size(mat0(1,:))
+        mat0 = mat0**expon
+        mat1 = mat1**expon
+               
+
+        mat00 = mat0(:,1:nCols-jmin)
+        mat11 = mat1(:,1:nCols-jmin)
+        
+        mat00 = mat00(:,nCols-jmin:1:-1)
+        mat11 = mat11(:,nCols-jmin:1:-1)
+        
+        
+        nx = size(mat00(1,:))
+        ny = size(mat00(:,1))
+        
+        !print*, "sxcorr"
+        !xcorr = conv(mat00, mat11, ny, nx, xdisp, 0)
+        xcorr = conv(mat11(x2:x2,:), mat00(x2:x2,:), 1, nx, xdisp, 0)
+
+    end function calculatexcorr
 end module xCorrModule

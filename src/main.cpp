@@ -7,9 +7,9 @@
 
 int main()
 {
-    PIV::Set set("/Users/alfonsocarre/Desktop/DATA/Saw/Set3_BIG_30us_1.4kHz_Saw_correc.h5");
+    PIV::Set set(settings.inputFile);
 
-
+    set.timeXcorr();
 
     set.closeFile();
 
