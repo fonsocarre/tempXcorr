@@ -35,6 +35,7 @@ struct Settings {
     int maxR;
     int deltaR;
     double minX;
+    int nFramesRxxNorm;
 };
 
 Settings getSettings(const std::string settingsFile);

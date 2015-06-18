@@ -35,8 +35,8 @@ cmake_install.cmake
 install_manifest.txt
 
 # binary stuff
-*/bin/
-*/build/
+bin/*
+build/*
 
 # Other stuff from OSX
 *.un~

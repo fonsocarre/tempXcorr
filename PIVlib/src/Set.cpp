@@ -389,7 +389,6 @@ void PIV::Set::timeXcorr()
     int nx = this->container[0].frames[0].nx;
     int ny = this->container[0].frames[0].ny;
     //std::cout << "nx = " << nx << std::endl;
-    double normRxx;
 
     // limits determination
     int jmin;
@@ -397,24 +396,36 @@ void PIV::Set::timeXcorr()
     {
         if (this->container[0].frames[0].x[nx - jmin] > settings.minX) break;
     }
-    normRxx = calculatexcorr(&(this->container[0].frames[0].vx[0]),
-                             &(this->container[0].frames[0].vx[0]),
-                             &(ny),
-                             &(nx),
-                             &(zero),
-                             &(expon),
-                             &(offset),
-                             &(jmin));
-    //normRxx = 1.0;
     this->removePicture(0);
+
+    // value for normalisation
+    double normRxx = 0.0;
+    for (int i=0; i<settings.nFramesRxxNorm; ++i)
+    {
+        this->retrievePicture(i);
+        normRxx += calculatexcorr(&(this->container[i].frames[0].vx[0]),
+                                 &(this->container[i].frames[0].vx[0]),
+                                 &(ny),
+                                 &(nx),
+                                 &(zero),
+                                 &(expon),
+                                 &(offset),
+                                 &(jmin));
+        this->removePicture(i);
+    }
+    normRxx /= settings.nFramesRxxNorm;
+
+    std::cout << "normRxx = " << normRxx << std::endl;
+    double temp;
+    int counter;
     std::ofstream ofile;
     ofile.open("tempXcorr.dat");
 
+    std::cout << std::endl;
     ofile << "VARIABLES = \"rDx\"  \"Rxx\"" << std::endl;
     for (int n=1; n<=settings.maxN; n+=1)
     // n loop for different time steps - ZONE
     {
-        std::cout << "  n=" << n << std::endl;
         std::vector<int> rVec(settings.maxR, 0);
         std::vector<double> RxxVec(settings.maxR, 0.0);
         for (int i=0; i<settings.maxR; ++i)
@@ -425,21 +436,24 @@ void PIV::Set::timeXcorr()
 
         for (int t=0; t<settings.nPics-n; ++t)
         {
-            std::cout << "   pic=" << t << std::endl;
+            std::cout << "\r" << std::flush;
+            std::cout << "  n=" << n <<" --> pic=" << t << std::flush;
             this->retrievePicture(t);
             this->retrievePicture(t+n);
             for (int i=0; i<settings.maxR; ++i)
             {
-                RxxVec[i] += calculatexcorr(&(this->container[t].frames[0].vx[0]),
-                                            &(this->container[t+n].frames[0].vx[0]),
-                                            &(ny),
-                                            &(nx),
-                                            &(rVec[i]),
-                                            &(expon),
-                                            &(offset),
-                                            &(jmin)) 
-                                        /((nx-jmin-rVec[i])*(settings.nPics-n));
-
+                temp = calculatexcorr(&(this->container[t].frames[0].vx[0]),
+                                      &(this->container[t+n].frames[0].vx[0]),
+                                      &(ny),
+                                      &(nx),
+                                      &(rVec[i]),
+                                      &(expon),
+                                      &(offset),
+                                      &(jmin));
+                if (temp > 0.0)
+                {
+                    RxxVec[i] += temp/((settings.nPics-n));
+                }
             }
             this->removePicture(t+n);
             this->removePicture(t);
@@ -452,4 +466,5 @@ void PIV::Set::timeXcorr()
         }
     }
     ofile.close();
+    std::cout << std::endl;
 }

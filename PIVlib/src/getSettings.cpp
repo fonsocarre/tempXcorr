@@ -66,6 +66,8 @@ Settings getSettings(const std::string settingsFile)
                                                     ("Settings.deltaR"));
         output.minX = boost::lexical_cast<double>(pt.get<std::string>
                                                     ("Settings.minX"));
+        output.nFramesRxxNorm = boost::lexical_cast<int>(pt.get<std::string>
+                                                     ("Settings.nFramesRxxNorm"));
     //    output.dxsdys.resize(constants::DIM);
     //    output.dxsdys[0] = boost::lexical_cast<double>(pt.get<std::string>
     //                                                ("DVM.dxs"));
