@@ -336,6 +336,48 @@ void PIV::Set::setHdf5File(H5File file)
     this->file = file;
 }
 
+void PIV::Set::separateTecplotOutput(std::string fileName,
+                                     std::string fileExt)
+{
+    std::stringstream ss;
+    for (int iZone=0;
+         iZone<static_cast<int>(this->loadedPictures.size());
+         ++iZone)
+     {
+        ss.str("");
+        ss.clear();
+        ss << fileName << "_" << iZone << fileExt;
+        std::ofstream tecFile;
+        tecFile.open(ss.str());
+        
+        tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
+         tecFile << "ZONE T=\"" << 1 <<
+            "\", I=" << this->container[iZone].frames[0].nx;
+         tecFile << " ,J=" << this->container[iZone].frames[0].ny;
+         tecFile << " ,DATAPACKING = POINT" << std::endl;
+                 for (int j=0; j<this->container[iZone].frames[0].nx; ++j)
+                 {
+                     for (int i=0; i<this->container[iZone].frames[0].ny; ++i)
+                     {
+                         tecFile <<this->container[iZone].frames[0].x
+                                    [j*this->container[iZone].frames[0].ny + i]
+                                 << "  "
+                                 <<this->container[iZone].frames[0].y
+                                    [j*this->container[iZone].frames[0].ny + i]
+                                 << "  "
+                                 <<this->container[iZone].frames[0].vx
+                                    [j*this->container[iZone].frames[0].ny + i]
+                                 << "  "
+                                 <<this->container[iZone].frames[0].vy
+                                    [j*this->container[iZone].frames[0].ny + i]
+                                 << "  "
+                                 << std::endl;
+                     }
+                 }
+        
+        tecFile.close();
+     }
+}
 
 void PIV::Set::tecplotOut(std::string fileName)
 {
@@ -376,6 +418,87 @@ void PIV::Set::tecplotOut(std::string fileName)
     tecFile.close();
 }
 
+void PIV::Set::PIV_like_xcorr()
+{
+    this->retrievePicture(0);
+    int nx = this->container[0].frames[0].nx;
+    int ny = this->container[0].frames[0].ny;
+
+    double dx = this->container[0].frames[0].x[0] -
+                this->container[0].frames[0].x[1];
+    this->removePicture(0);
+    
+    std::ofstream ofile;
+    ofile.open("tempXcoor.dat");
+    ofile << "VARIABLES = \"x\"  \"y\" \"uc\" \"vc\" \"val\"" << std::endl;
+
+    std::cout << std::endl;
+    for (int n=1; n<=settings.maxN; ++n)
+    {
+        std::vector<double> xdisps(nx*ny, 0.0);
+        std::vector<double> ydisps(nx*ny, 0.0);
+        std::vector<double> xcorrvals(nx*ny, 0.0);
+        for (int iPict=0; iPict<settings.nPics-n; ++iPict)
+        {
+            std::vector<double> txdisps;
+            std::vector<double> tydisps;
+            std::vector<double> txcorrvals;
+
+            this->retrievePicture(iPict);
+            this->retrievePicture(iPict + n);
+            std::cout << "\r" << std::flush;
+            std::cout << "  n=" << n << "  pict=" << iPict << std::flush;
+            //piv_xcorr(&(this->container[iPict].frames[0].vx[0]),
+                      //&(this->container[iPict + n].frames[0].vx[0]),
+                      //&(ny),
+                      //&(nx),
+                      //&(settings.wNx),
+                      //&(settings.wNy),
+                      //&(txdisps[0]),
+                      //&(tydisps[0]),
+                      //&(txcorrvals[0]));
+
+            PIV::xxcorr(this->container[iPict].frames[0].vx,
+                       this->container[iPict + n].frames[0].vx,
+                       settings.wNx,
+                       settings.wNy,
+                       ny,
+                       nx,
+                       txdisps,
+                       tydisps,
+                       txcorrvals);
+
+            this->removePicture(iPict);
+            this->removePicture(iPict + n);
+
+            for (int i=0; i<nx*ny; ++i)
+            {
+                xdisps[i] += txdisps[i];
+                ydisps[i] += tydisps[i];
+                xcorrvals[i] += txcorrvals[i];
+            }
+        }
+        for (int i=0; i<nx*ny; ++i)
+        {
+            xdisps[i] /= (settings.nPics - n);
+            ydisps[i] /= (settings.nPics - n);
+            xcorrvals[i] /= (settings.nPics - n);
+        }
+        ofile << "ZONE T=\"n=" << n << "\" I=" << nx << " J=" << ny
+              << " DATAPACKING=POINT" << std::endl;
+        this->retrievePicture(0);
+        for (int i=0; i<nx*ny; ++i)
+        {
+            ofile << this->container[0].frames[0].x[i] << "   "
+                  << this->container[0].frames[0].y[i] << "   "
+                  << -xdisps[i]*dx << "   "
+                  << ydisps[i]*dx << "   "
+                  << xcorrvals[i] << std::endl;
+        }
+        this->removePicture(0);
+    }
+    ofile.close();
+}
 
 void PIV::Set::timeXcorr()
 {
@@ -398,71 +521,80 @@ void PIV::Set::timeXcorr()
     }
     this->removePicture(0);
 
-    // value for normalisation
-    double normRxx = 0.0;
-    for (int i=0; i<settings.nFramesRxxNorm; ++i)
-    {
-        this->retrievePicture(i);
-        normRxx += calculatexcorr(&(this->container[i].frames[0].vx[0]),
-                                 &(this->container[i].frames[0].vx[0]),
-                                 &(ny),
-                                 &(nx),
-                                 &(zero),
-                                 &(expon),
-                                 &(offset),
-                                 &(jmin));
-        this->removePicture(i);
-    }
-    normRxx /= settings.nFramesRxxNorm;
 
-    std::cout << "normRxx = " << normRxx << std::endl;
     double temp;
     int counter;
     std::ofstream ofile;
     ofile.open("tempXcorr.dat");
 
+
+    double normRxx = 0.0;
     std::cout << std::endl;
-    ofile << "VARIABLES = \"rDx\"  \"Rxx\"" << std::endl;
+    ofile << "VARIABLES = \"rDx\" \"y\" \"Rxx\"" << std::endl;
     for (int n=1; n<=settings.maxN; n+=1)
     // n loop for different time steps - ZONE
     {
-        std::vector<int> rVec(settings.maxR, 0);
-        std::vector<double> RxxVec(settings.maxR, 0.0);
-        for (int i=0; i<settings.maxR; ++i)
+        ofile << "ZONE T=\"n=" << n << "\" I=" << settings.maxR 
+              << " J=" << settings.maxY-settings.minY
+              << " DATAPACKING=POINT" << std::endl;
+        for (int x2=settings.minY; x2<settings.maxY; ++x2)
         {
-            rVec[i] = i*settings.deltaR;
-            RxxVec[i] = 0.0;
-        }
+            // value for normalisation
+            normRxx = 0.0;
+            for (int i=0; i<settings.nFramesRxxNorm; ++i)
+            {
+                this->retrievePicture(i);
+                normRxx += calculatexcorr(&(this->container[i].frames[0].vx[0]),
+                                          &(this->container[i].frames[0].vx[0]),
+                                          &(ny),
+                                          &(nx),
+                                          &(zero),
+                                          &(expon),
+                                          &(offset),
+                                          &(jmin),
+                                          &(x2));
+                this->removePicture(i);
+            }
+            normRxx /= settings.nFramesRxxNorm;
 
-        for (int t=0; t<settings.nPics-n; ++t)
-        {
-            std::cout << "\r" << std::flush;
-            std::cout << "  n=" << n <<" --> pic=" << t << std::flush;
-            this->retrievePicture(t);
-            this->retrievePicture(t+n);
+            std::vector<int> rVec(settings.maxR, 0);
+            std::vector<double> RxxVec(settings.maxR, 0.0);
             for (int i=0; i<settings.maxR; ++i)
             {
-                temp = calculatexcorr(&(this->container[t].frames[0].vx[0]),
-                                      &(this->container[t+n].frames[0].vx[0]),
-                                      &(ny),
-                                      &(nx),
-                                      &(rVec[i]),
-                                      &(expon),
-                                      &(offset),
-                                      &(jmin));
-                if (temp > 0.0)
-                {
-                    RxxVec[i] += temp/((settings.nPics-n));
-                }
+                rVec[i] = i*settings.deltaR;
+                RxxVec[i] = 0.0; 
             }
-            this->removePicture(t+n);
-            this->removePicture(t);
-        }
-        ofile << "ZONE T=\"n=" << n << "\" I=" << settings.maxR 
-              << " DATAPACKING=POINT" << std::endl;
-        for (int i=0; i<settings.maxR; ++i)
-        {
-            ofile << rVec[i] << "    " << RxxVec[i]/normRxx << std::endl;
+
+            for (int t=0; t<settings.nPics-n; ++t)
+            {
+                std::cout << "\r" << std::flush;
+                std::cout << "  n=" << n <<" --> pic=" << t << std::flush;
+                this->retrievePicture(t);
+                this->retrievePicture(t+n);
+                for (int i=0; i<settings.maxR; ++i)
+                {
+                    temp = calculatexcorr(&(this->container[t].frames[0].vx[0]),
+                                          &(this->container[t+n].frames[0].vx[0]),
+                                          &(ny),
+                                          &(nx),
+                                          &(rVec[i]),
+                                          &(expon),
+                                          &(offset),
+                                          &(jmin),
+                                          &(x2));
+                    if (temp > 0.0)
+                    {
+                        RxxVec[i] += temp/((settings.nPics-n));
+                    }
+                }
+                this->removePicture(t+n);
+                this->removePicture(t);
+            }
+            for (int i=0; i<settings.maxR; ++i)
+            {
+                ofile << rVec[i] << "    " << x2  << "    "
+                      << RxxVec[i]/normRxx << std::endl;
+            }
         }
     }
     ofile.close();

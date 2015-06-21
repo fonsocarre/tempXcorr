@@ -36,6 +36,10 @@ struct Settings {
     int deltaR;
     double minX;
     int nFramesRxxNorm;
+    int minY;
+    int maxY;
+    int wNx;
+    int wNy;
 };
 
 Settings getSettings(const std::string settingsFile);

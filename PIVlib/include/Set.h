@@ -21,6 +21,7 @@
 #include "Picture.h"
 #include "getSettings.h"
 #include "xCorrModule.h"
+#include "PIV_xcorr.h"
 
 #include "H5Cpp.h"
 #ifndef H5_NO_NAMESPACE
@@ -64,8 +65,11 @@ namespace PIV
         PIV::Frame calculateAvgField();
         
         void tecplotOut(std::string fileName);
+        void separateTecplotOutput(std::string fileName,
+                                             std::string fileExt);
 
         void timeXcorr();
+        void PIV_like_xcorr();
     };
 }
 

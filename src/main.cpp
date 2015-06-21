@@ -9,8 +9,20 @@ int main()
 {
     PIV::Set set(settings.inputFile);
 
-    set.timeXcorr();
+    //int nPics = 200;
+    //for (int i=0; i<nPics; ++i)
+    //{
+        //set.retrievePicture(i);
+    //}
 
+    //set.separateTecplotOutput("tmp/tecplotOutTest", ".dat");
+    //set.timeXcorr();
+    set.PIV_like_xcorr();
+
+    //for (int i=0; i<nPics; ++i)
+    //{
+        //set.removePicture(i);
+    //}
     set.closeFile();
 
 

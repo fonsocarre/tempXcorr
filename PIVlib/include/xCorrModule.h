@@ -33,5 +33,16 @@ extern "C"
                           int* xdisp,
                           int* expon,
                           double* offset,
-                          int* jmin);
+                          int* jmin,
+                          int* x2);
+
+    void piv_xcorr(double* mat0,
+                   double* mat1,
+                   int* nRows,
+                   int* nCols,
+                   int* wNx,
+                   int* wNy, 
+                   double* xdisps,
+                   double* ydisps,
+                   double* xcorrvals);
 }

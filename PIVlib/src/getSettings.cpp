@@ -68,6 +68,14 @@ Settings getSettings(const std::string settingsFile)
                                                     ("Settings.minX"));
         output.nFramesRxxNorm = boost::lexical_cast<int>(pt.get<std::string>
                                                      ("Settings.nFramesRxxNorm"));
+        output.minY= boost::lexical_cast<int>(pt.get<std::string>
+                                                ("Settings.minY"));
+        output.maxY= boost::lexical_cast<int>(pt.get<std::string>
+                                                ("Settings.maxY"));
+        output.wNx= boost::lexical_cast<int>(pt.get<std::string>
+                                                ("Settings.wNx"));
+        output.wNy= boost::lexical_cast<int>(pt.get<std::string>
+                                                ("Settings.wNy"));
     //    output.dxsdys.resize(constants::DIM);
     //    output.dxsdys[0] = boost::lexical_cast<double>(pt.get<std::string>
     //                                                ("DVM.dxs"));

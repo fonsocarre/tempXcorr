@@ -273,6 +273,8 @@ PIV	PIVlib/include/Frame.h	/^namespace PIV$/;"	n
 PIV	PIVlib/include/PIV_Stitch.h	/^namespace PIV$/;"	n
 PIV	PIVlib/include/Picture.h	/^namespace PIV$/;"	n
 PIV	PIVlib/include/Set.h	/^namespace PIV$/;"	n
+PIV_like_xcorr	PIVlib/src/Set.cpp	/^void PIV::Set::PIV_like_xcorr()$/;"	f	class:PIV::Set
+PIV_xCorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine PIV_xCorr(/;"	s	module:xCorrModule
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	269;"	d	file:
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	272;"	d	file:
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	275;"	d	file:
@@ -393,6 +395,7 @@ copyProperties	PIVlib/src/Set.cpp	/^PIV::Set PIV::Set::copyProperties(std::strin
 correctFrameCoord	PIVlib/src/Picture.cpp	/^void PIV::Picture::correctFrameCoord(double xdisp, double ydisp)$/;"	f	class:PIV::Picture
 cutFrames	PIVlib/src/Picture.cpp	/^void PIV::Picture::cutFrames(int wallLoc, PIV::Picture& newP)$/;"	f	class:PIV::Picture
 dataset_name	PIVlib/include/Frame.h	/^        std::string dataset_name;$/;"	m	class:PIV::Frame
+deltaR	PIVlib/include/getSettings.h	/^    int deltaR;$/;"	m	struct:Settings
 dims	PIVlib/include/Frame.h	/^        hsize_t dims[2];$/;"	m	class:PIV::Frame
 dist	PIVlib/Stitchutils/src/interpolationModule.f90	/^function dist(/;"	f	module:interpolationModule
 dt	PIVlib/include/Set.h	/^        double dt;$/;"	m	class:PIV::Set
@@ -437,9 +440,13 @@ main	src/main.cpp	/^int main()$/;"	f
 maxN	PIVlib/include/getSettings.h	/^    int maxN;$/;"	m	struct:Settings
 maxR	PIVlib/include/getSettings.h	/^    int maxR;$/;"	m	struct:Settings
 maxXdisp	PIVlib/include/getSettings.h	/^    double maxXdisp;$/;"	m	struct:Settings
+maxY	PIVlib/include/getSettings.h	/^    int maxY;$/;"	m	struct:Settings
 middleInterpolation	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine middleInterpolation(/;"	s	module:interpolationModule
+minX	PIVlib/include/getSettings.h	/^    double minX;$/;"	m	struct:Settings
+minY	PIVlib/include/getSettings.h	/^    int minY;$/;"	m	struct:Settings
 n	PIVlib/include/Frame.h	/^        int n;$/;"	m	class:PIV::Frame
 nFrames	PIVlib/include/Picture.h	/^        int nFrames;$/;"	m	class:PIV::Picture
+nFramesRxxNorm	PIVlib/include/getSettings.h	/^    int nFramesRxxNorm;$/;"	m	struct:Settings
 nPics	PIVlib/include/getSettings.h	/^    int nPics;$/;"	m	struct:Settings
 nPicsForStitch	PIVlib/include/getSettings.h	/^    int nPicsForStitch;$/;"	m	struct:Settings
 nPictures	PIVlib/include/Set.h	/^        int nPictures;$/;"	m	class:PIV::Set
@@ -455,10 +462,12 @@ operator =	PIVlib/src/Frame.cpp	/^PIV::Frame& PIV::Frame::operator=(const PIV::F
 operator =	PIVlib/src/Picture.cpp	/^PIV::Picture& PIV::Picture::operator= (Picture&& other)$/;"	f	class:PIV::Picture
 outputAverageField	PIVlib/src/Set.cpp	/^void PIV::Set::outputAverageField(PIV::Frame avgFrame, std::string outFile)$/;"	f	class:PIV::Set
 parallelStitch	PIVlib/src/PIV_Stitch.cpp	/^void PIV::parallelStitch(const std::vector<double> displacements,$/;"	f	class:PIV
+point_mat_xcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine point_mat_xcorr(/;"	s	module:xCorrModule
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 removePicture	PIVlib/src/Set.cpp	/^void PIV::Set::removePicture(int nPicture)$/;"	f	class:PIV::Set
 retrievePicture	PIVlib/src/Set.cpp	/^void PIV::Set::retrievePicture(int nPicture)$/;"	f	class:PIV::Set
+separateTecplotOutput	PIVlib/src/Set.cpp	/^void PIV::Set::separateTecplotOutput(std::string fileName,$/;"	f	class:PIV::Set
 setHdf5File	PIVlib/src/Set.cpp	/^void PIV::Set::setHdf5File(H5File file)$/;"	f	class:PIV::Set
 settings	PIVlib/src/getSettings.cpp	/^Settings settings = getSettings($/;"	v
 stitchPicture	PIVlib/src/PIV_Stitch.cpp	/^void PIV::stitchPicture(const std::vector<double> displacements,$/;"	f	class:PIV
@@ -479,6 +488,8 @@ unload	PIVlib/src/Picture.cpp	/^void PIV::Picture::unload(H5File& file, std::str
 unloadPicture	PIVlib/src/Set.cpp	/^void PIV::Set::unloadPicture(int iPict)$/;"	f	class:PIV::Set
 vx	PIVlib/include/Frame.h	/^        std::vector<double> vx;$/;"	m	class:PIV::Frame
 vy	PIVlib/include/Frame.h	/^        std::vector<double> vy;$/;"	m	class:PIV::Frame
+wNx	PIVlib/include/getSettings.h	/^    int wNx;$/;"	m	struct:Settings
+wNy	PIVlib/include/getSettings.h	/^    int wNy;$/;"	m	struct:Settings
 x	PIVlib/include/Frame.h	/^        std::vector<double> x;$/;"	m	class:PIV::Frame
 xCorrModule	PIVlib/Stitchutils/src/xCorrModule.f90	/^module xCorrModule$/;"	m
 xcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine xcorr(/;"	s	module:xCorrModule
