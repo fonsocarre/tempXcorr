@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <stdlib.h>
 
 static inline int ij(int& i, int& j, int& nRows, int& nCols)
 {

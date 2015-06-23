@@ -15,6 +15,10 @@ void PIV::xxcorr(const std::vector<double>& mat0,
     ydisps.resize(n);
     xcorrvals.resize(n);
 
+
+    // UGLY PARAMETER TODO
+    double lim = 10.0;
+
     double xdisp = 0.0;
     double ydisp = 0.0;
     double xcorrval = 0.0;
@@ -40,6 +44,7 @@ void PIV::xxcorr(const std::vector<double>& mat0,
             {
                 for (int jj=jmin; jj<=jmax; ++jj)
                 {
+                    if (abs(mat1[ij(ii,jj,nRows, nCols)]) > lim) continue; 
                     xcorrval += mat0[ij(i,j,nRows,nCols)]*
                                 mat1[ij(ii, jj, nRows, nCols)];
                     if (xcorrval > maxxcorrval)

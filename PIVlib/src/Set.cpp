@@ -385,10 +385,12 @@ void PIV::Set::tecplotOut(std::string fileName)
     tecFile.open(fileName);
     
     tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
+    std::cout << std::endl;
     for (int iZone=0;
-         iZone<static_cast<int>(this->loadedPictures.size());
+         iZone<settings.nPics;
          ++iZone)
          {
+             this->retrievePicture(iZone);
              tecFile << "ZONE T=\"" << iZone <<
                 "\", I=" << this->container[iZone].frames[0].nx;
              tecFile << " ,J=" << this->container[iZone].frames[0].ny;
@@ -413,8 +415,11 @@ void PIV::Set::tecplotOut(std::string fileName)
                              << std::endl;
                  }
              }
+             std::cout << "\r"<< std::flush;
+             std::cout << "  pict = " << iZone << std::flush;
+             this->removePicture(iZone);
          }
-    
+         std::cout << std::endl;
     tecFile.close();
 }
 
@@ -520,6 +525,8 @@ void PIV::Set::timeXcorr()
         if (this->container[0].frames[0].x[nx - jmin] > settings.minX) break;
     }
     this->removePicture(0);
+    double normRxx = 0.0;
+    std::cout << "normRxx = " << normRxx << std::endl;
 
 
     double temp;
@@ -528,7 +535,6 @@ void PIV::Set::timeXcorr()
     ofile.open("tempXcorr.dat");
 
 
-    double normRxx = 0.0;
     std::cout << std::endl;
     ofile << "VARIABLES = \"rDx\" \"y\" \"Rxx\"" << std::endl;
     for (int n=1; n<=settings.maxN; n+=1)
