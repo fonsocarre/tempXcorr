@@ -264,52 +264,52 @@ void PIV::stitchPicture(const std::vector<double> displacements,
 }
 
 
-void PIV::naturalNeighbInterpolation
-                                (const std::vector<double>& xin,
-                                 const std::vector<double>& yin,
-                                 const std::vector<double>& varin,
-                                 const std::vector<double>& xout,
-                                 const std::vector<double>& yout,
-                                 std::vector<double>& varOut)
-{
-    int nIn  = static_cast<int> (xin.size());
-    int nOut = static_cast<int> (xout.size());
+//void PIV::naturalNeighbInterpolation
+                                //(const std::vector<double>& xin,
+                                 //const std::vector<double>& yin,
+                                 //const std::vector<double>& varin,
+                                 //const std::vector<double>& xout,
+                                 //const std::vector<double>& yout,
+                                 //std::vector<double>& varOut)
+//{
+    //int nIn  = static_cast<int> (xin.size());
+    //int nOut = static_cast<int> (xout.size());
     
     //std::vector<double> varOut;
-    varOut.reserve(nOut);
+    //varOut.reserve(nOut);
     
-    Delaunay_triangulation T;
-    std::map<Point, Coord_type, K::Less_xy_2> function_values;
-    typedef CGAL::Data_access< std::map<Point, Coord_type, K::Less_xy_2 > >
-                                                            Value_access;
-    // input data insertion
+    //Delaunay_triangulation T;
+    //std::map<Point, Coord_type, K::Less_xy_2> function_values;
+    //typedef CGAL::Data_access< std::map<Point, Coord_type, K::Less_xy_2 > >
+                                                            //Value_access;
+     //input data insertion
     //std::cout << "Inserting points..." << std::endl;
-    for (int i=0; i<nIn; ++i)
-    {
-        K::Point_2 p(xin[i], yin[i]);
-        T.insert(p);
-        function_values.insert(std::make_pair(p, varin[i]));
-    }
+    //for (int i=0; i<nIn; ++i)
+    //{
+        //K::Point_2 p(xin[i], yin[i]);
+        //T.insert(p);
+        //function_values.insert(std::make_pair(p, varin[i]));
+    //}
     
-//     coordinate computation and interpolation
+     //coordinate computation and interpolation
     //std::cout << "Interpolating to " << nOut << " points..." << std::endl;
-    for (int i=0; i<nOut; ++i)
-    {
+    //for (int i=0; i<nOut; ++i)
+    //{
         //std::cout << i << std::endl;
-        K::Point_2 p(xout[i], yout[i]);
-        std::vector<std::pair<Point,Coord_type>> coords;
+        //K::Point_2 p(xout[i], yout[i]);
+        //std::vector<std::pair<Point,Coord_type>> coords;
         
-        Coord_type norm = CGAL::natural_neighbor_coordinates_2
-                        ( T, p, std::back_inserter(coords)).second;
+        //Coord_type norm = CGAL::natural_neighbor_coordinates_2
+                        //( T, p, std::back_inserter(coords)).second;
         
-        Coord_type res = CGAL::linear_interpolation(coords.begin(), coords.end(),
-                                                    norm, Value_access(function_values));
-        varOut.push_back(res);
-    }
+        //Coord_type res = CGAL::linear_interpolation(coords.begin(), coords.end(),
+                                                    //norm, Value_access(function_values));
+        //varOut.push_back(res);
+    //}
     //std::cout << " ...DONE" << std::endl;
     
     //return varOut;
-}
+//}
 
 
 std::vector<double> PIV::getDisplacements(std::vector<int> order,

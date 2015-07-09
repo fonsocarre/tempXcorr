@@ -40,6 +40,9 @@ struct Settings {
     int maxY;
     int wNx;
     int wNy;
+
+    double cutLength;
+    int padding;
 };
 
 Settings getSettings(const std::string settingsFile);

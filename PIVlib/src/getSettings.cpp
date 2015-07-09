@@ -76,6 +76,10 @@ Settings getSettings(const std::string settingsFile)
                                                 ("Settings.wNx"));
         output.wNy= boost::lexical_cast<int>(pt.get<std::string>
                                                 ("Settings.wNy"));
+        output.cutLength = boost::lexical_cast<double>(pt.get<std::string>
+                                                     ("Settings.cutLength"));
+        output.padding = boost::lexical_cast<int>(pt.get<std::string>
+                                                     ("Settings.padding"));
     //    output.dxsdys.resize(constants::DIM);
     //    output.dxsdys[0] = boost::lexical_cast<double>(pt.get<std::string>
     //                                                ("DVM.dxs"));
