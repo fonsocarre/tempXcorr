@@ -228,8 +228,164 @@ int PIV::Frame::findWallLocation()
 }
 
 
+std::vector<double> PIV::Frame::calculateVorticity()
+{
+    std::vector<double> vort(this->x.size(), 0.0);
 
+    const double dx = std::abs(this->x[1] - this->x[0]);
+    
+    // variable for knowing if coords increase with index (+1) or 
+    // decrease (-1)
+    const int signx = (this->x[1] - this->x[0]>0.0? 1: -1);
+    const int signy = (this->y[this->nx] - this->y[0]>0.0? 1: -1);
 
+    // this implementation uses the circulation way of calculating the
+    // vorticity
+    // C = \int \vec{u}\cdot d\vec{l} = \int_A \omega dA
+    double elemVort;
+    std::vector<int> locations;
+    for (int iElem=0; iElem < this->ny-1; ++iElem)
+    {
+        for (int jElem=0; jElem < this->nx-1; ++jElem)
+        {
+            elemVort = 0.0;
+            
+            // side 11 (S)
+            elemVort += 0.5*(this->vx[this->ij(iElem + 1, jElem)] +
+                             this->vx[this->ij(iElem + 1, jElem+1)]) *
+                                    dx * signx;
+            
+            // side 12 (E)
+            elemVort += 0.5*(this->vy[this->ij(iElem + 1, jElem + 1)] +
+                             this->vy[this->ij(iElem, jElem + 1)]) *
+                                    dx * signy;
+
+            // side 13 (N)
+            elemVort += -0.5*(this->vx[this->ij(iElem, jElem + 1)] +
+                              this->vx[this->ij(iElem, jElem)]) *
+                                    dx * signx;
+
+            // side 14 (W)
+            elemVort += -0.5*(this->vy[this->ij(iElem, jElem)] +
+                              this->vy[this->ij(iElem + 1, jElem)]) *
+                                    dx * signy;
+            
+            // interpolation to the nodes based on if corner (1, 2, 3, 4),
+            // vertex (11, 12, 13, 14), or interior (-1)
+            locations = this->determinePositions(iElem, jElem);
+            std::vector<double> coeffs(4, 0.25);
+            for (int iCoeff=0; iCoeff<4; ++iCoeff)
+            {
+                switch (locations[iCoeff])
+                {
+                    case -1:
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        coeffs[iCoeff] = 1.0;
+                        break;
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                        coeffs[iCoeff] = 0.5;
+                        break;
+                    default:
+                        std::cerr << "bad input in line" << __LINE__
+                                                     << std::endl;
+                }
+            }
+
+            // inserting the values in the vort matrix
+            // i+1,j
+            vort[this->ij(iElem+1, jElem)] += coeffs[0]*elemVort;
+            // i+1,j+1
+            vort[this->ij(iElem+1, jElem+1)] += coeffs[1]*elemVort;
+            // i,j+1
+            vort[this->ij(iElem, jElem+1)] += coeffs[2]*elemVort;
+            // i,j
+            vort[this->ij(iElem, jElem)] += coeffs[3]*elemVort;
+        }
+    }
+
+    return vort;
+}
+
+int PIV::Frame::ij(int i, int j)
+{
+    return i*this->nx + j;
+}
+
+std::vector<int> PIV::Frame::determinePositions(int i, int j)
+{
+    std::vector<int> indexes(4, 0);
+
+    // first point (SW - i+1, j)
+    if (i+1 == this->ny-1)
+    {
+        // if j>0, only vertex
+        if (j>0)
+        {
+            indexes[0] = 11;
+        } else // corner (SW)
+        {
+            indexes[0] = 1;
+        }
+    } else
+    {
+        indexes[0] = -1;
+    }
+
+    // second point (SE - i+1, j+1)
+    if (i+1 == this->ny-1)
+    {
+        // if j+1 is nx-1, then corner (SE)
+        if (j+1 == this->nx-1)
+        {
+            indexes[1] = 2;
+        } else
+        {
+            indexes[1] = 12;
+        }
+    } else
+    {
+        indexes[1] = -1;
+    }
+
+    // third point (NE - i, j+1)
+    if (i == 0)
+    {
+        if (j+1 == this->nx-1)
+        {
+            indexes[2] = 3;
+        } else
+        {
+            indexes[2] = 13;
+        }
+    } else 
+    {
+        indexes[2] = -1;
+    }
+
+    // fourth point (NW - i, j)
+    if (i == 0)
+    {
+        if (j == 0)
+        {
+            indexes[3] = 4;
+        } else
+        {
+            indexes[3] = 14;
+        }
+    } else
+    {
+        indexes[3] = -1;
+    }
+
+    return indexes;
+}
 
 
 

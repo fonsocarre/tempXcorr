@@ -423,7 +423,55 @@ void PIV::Set::tecplotOut(std::string fileName)
     tecFile.close();
 }
 
-void PIV::Set::PIV_like_xcorr()
+
+void PIV::Set::vorticityTecplotOut(std::string fileName)
+{
+    std::ofstream tecFile;
+    tecFile.open(fileName);
+    
+    tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\" \"VORT\"" << std::endl;
+    std::cout << std::endl;
+    for (int iZone=0;
+         iZone<settings.nPics;
+         ++iZone)
+         {
+             this->retrievePicture(iZone);
+             std::vector<double> vort =
+                        this->container[iZone].frames[0].calculateVorticity();
+             tecFile << "ZONE T=\"" << iZone <<
+                "\", I=" << this->container[iZone].frames[0].nx;
+             tecFile << " ,J=" << this->container[iZone].frames[0].ny;
+             tecFile << " ,SOLUTIONTIME = " << iZone;
+             tecFile << " ,DATAPACKING = POINT" << std::endl;
+             for (int j=0; j<this->container[iZone].frames[0].nx; ++j)
+             {
+                 for (int i=0; i<this->container[iZone].frames[0].ny; ++i)
+                 {
+                     tecFile <<this->container[iZone].frames[0].x
+                                [j*this->container[iZone].frames[0].ny + i]
+                             << "  "
+                             <<this->container[iZone].frames[0].y
+                                [j*this->container[iZone].frames[0].ny + i]
+                             << "  "
+                             <<this->container[iZone].frames[0].vx
+                                [j*this->container[iZone].frames[0].ny + i]
+                             << "  "
+                             <<this->container[iZone].frames[0].vy
+                                [j*this->container[iZone].frames[0].ny + i]
+                             << "  "
+                             <<vort[j*this->container[iZone].frames[0].ny + i]
+                             << std::endl;
+                 }
+             }
+             std::cout << "\r"<< std::flush;
+             std::cout << "  pict = " << iZone << std::flush;
+             this->removePicture(iZone);
+         }
+         std::cout << std::endl;
+    tecFile.close();
+}
+
+void PIV::Set::PIV_like_xcorr(char vxOrVort)
 {
     this->retrievePicture(0);
     int nx = this->container[0].frames[0].nx;
@@ -463,15 +511,31 @@ void PIV::Set::PIV_like_xcorr()
                       //&(tydisps[0]),
                       //&(txcorrvals[0]));
 
-            PIV::xxcorr(this->container[iPict].frames[0].vx,
-                       this->container[iPict + n].frames[0].vx,
-                       settings.wNx,
-                       settings.wNy,
-                       ny,
-                       nx,
-                       txdisps,
-                       tydisps,
-                       txcorrvals);
+            switch (vxOrVort)
+            {
+                case 'v':
+                    PIV::xxcorr(this->container[iPict].frames[0].vx,
+                               this->container[iPict + n].frames[0].vx,
+                               settings.wNx,
+                               settings.wNy,
+                               ny,
+                               nx,
+                               txdisps,
+                               tydisps,
+                               txcorrvals);
+                    break;
+                case 'w':
+                    PIV::xxcorr(this->container[iPict].frames[0].calculateVorticity(),
+                               this->container[iPict + n].frames[0].calculateVorticity(),
+                               settings.wNx,
+                               settings.wNy,
+                               ny,
+                               nx,
+                               txdisps,
+                               tydisps,
+                               txcorrvals);
+                    break;
+            }
 
             this->removePicture(iPict);
             this->removePicture(iPict + n);

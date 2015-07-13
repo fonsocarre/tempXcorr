@@ -65,11 +65,12 @@ namespace PIV
         PIV::Frame calculateAvgField();
         
         void tecplotOut(std::string fileName);
+        void vorticityTecplotOut(std::string fileName);
         void separateTecplotOutput(std::string fileName,
                                              std::string fileExt);
 
         void timeXcorr();
-        void PIV_like_xcorr();
+        void PIV_like_xcorr(char vxOrVort);
     };
 }
 

@@ -72,6 +72,7 @@ PIV::Picture& PIV::Picture::operator= (Picture&& other)
 
 void PIV::Picture::unload(H5File& file, std::string groupName)
 {
+    std::cout << __LINE__ << " picture" << std::endl << std::flush;
     Group group = file.createGroup(groupName);
 
     // nFrames

@@ -28,7 +28,7 @@ SET( CMAKE_CXX_FLAGS -std=c++14)
 #find_package( Boost lexical_cast property_tree)
 #include_directories( ${Boost_INCLUDE_DIRS} )
 #SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/lib -L/usr/gcc-5.1.0/lib -L/opt/intel/composer_xe_2015.3.187/compiler/lib/ -lifcore -lifcoremt -limf -lgfortran -lhdf5 -lhdf5_cpp")
-SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/usr/local/lib -lgfortran -lhdf5 -lhdf5_cpp -lfftw3")
+SET( CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L/usr/gcc-5.1.0/lib -L/usr/local/lib -lgfortran -lhdf5 -lhdf5_cpp -lfftw3")
 link_directories(/usr/local/lib)
 add_subdirectory(src)
 

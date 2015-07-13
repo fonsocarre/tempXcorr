@@ -37,6 +37,9 @@ namespace PIV
         
         void unload(H5File& file, std::string groupName);
         int findWallLocation();
+        std::vector<double> calculateVorticity();
+        int ij(int i, int j);
+        std::vector<int> determinePositions(int i, int j);
         
         std::string dataset_name;
         hsize_t dims[2];
