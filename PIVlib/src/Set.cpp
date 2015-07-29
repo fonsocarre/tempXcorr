@@ -63,6 +63,15 @@ void PIV::Set::retrievePicture(int nPicture)
 
 void PIV::Set::removePicture(int nPicture)
 {
+    if (this->loadedPictures.find(nPicture) == this->loadedPictures.end())
+    // element not in memory
+    {
+        std::cerr << "Error, tried to remove a picture that does not exist"
+                    << std::endl;
+        std::cerr << "    in Set::removePicture@ line " << __LINE__ 
+                    << std::endl;
+        std::cerr << "The pict is iPict = " << nPicture << std::endl;
+    }
     auto it = this->container.find(nPicture);
     this->container.erase(it);
     this->loadedPictures.erase(nPicture);
@@ -161,12 +170,13 @@ PIV::Set PIV::Set::copyProperties(std::string fileName)
 
 void PIV::Set::insertPicture(PIV::Picture& pict)
 {
-    if (this->loadedPictures.find(pict.iPicture) != this->loadedPictures.end())
+    if (this->loadedPictures.find(pict.iPicture-1) != this->loadedPictures.end())
     {
         std::cerr << "Problem!!! adding twice the same pict to the set!!!"
                   << std::endl
                   << "In Set.cpp @ line " << __LINE__ << std::endl;
     }
+    //std::cout << "Inserting pict index = " << pict.iPicture-1 << std::endl;
     this->container[pict.iPicture-1] = std::move(pict);
     this->loadedPictures.insert(pict.iPicture-1);
 }
@@ -180,12 +190,14 @@ void PIV::Set::unloadPicture(int iPict)
                     << std::endl;
         std::cerr << "    in Set::unloadPicture @ line " << __LINE__ 
                     << std::endl;
+        std::cerr << "The pict is iPict = " << iPict << std::endl;
     }
     
     std::stringstream groupName;
     groupName << "/" << iPict+1 ;
     //this->file.createGroup(groupName.str());
     this->container[iPict].unload(this->file, groupName.str());
+    this->removePicture(iPict);
 }
 
 void PIV::Set::closeFile()
@@ -250,54 +262,6 @@ void PIV::Set::outputAverageField(PIV::Frame avgFrame, std::string outFile)
     std::ofstream output;
     output.open(outFile);
 
-//    std::vector<double> x;
-//    std::vector<double> y;
-//    std::vector<double> vx;
-//    std::vector<double> vy;
-//
-//    //std::shared_ptr<PIV::Frame> frame = nullptr;
-//
-//    int n = 0;
-//    int nx = 0;
-//    int ny = 0;
-//    for (int iPict=0; iPict<this->nPictures; ++iPict)
-//    {
-//        this->retrievePicture(iPict);
-//        if (iPict == 0)
-//        {
-//            n = this->container[0].frames[0].n;
-//            nx = this->container[0].frames[0].nx;
-//            ny = this->container[0].frames[0].ny;
-//            // Allocation
-//            x.resize(n);
-//            y.resize(n);
-//            vx.resize(n);
-//            vy.resize(n);
-//            for (int i=0; i<n; ++i)
-//            {
-//                vx[i] = 0.0;
-//                vy[i] = 0.0;
-//            }
-//            x = this->container[0].frames[0].x;
-//            y = this->container[0].frames[0].y;
-//        }
-//        for (int i=0; i<n; ++i)
-//        {
-//            vx[i] += this->container[iPict].frames[0].vx[i];
-//            vy[i] += this->container[iPict].frames[0].vy[i];
-//        }
-//
-//        this->removePicture(iPict);
-//        std:: cout << "   progress: " << (iPict)/(this->nPictures*0.01) 
-//                   << std::endl;
-//    }
-//
-//    for (int i=0; i<n; ++i)
-//    {
-//        vx[i] /= this->nPictures;
-//        vy[i] /= this->nPictures;
-//    }
-//    
     
     output << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
     int iZone = 0;
@@ -340,15 +304,20 @@ void PIV::Set::separateTecplotOutput(std::string fileName,
                                      std::string fileExt)
 {
     std::stringstream ss;
+    std::cout << std::endl;
     for (int iZone=0;
-         iZone<static_cast<int>(this->loadedPictures.size());
+         //iZone<static_cast<int>(this->loadedPictures.size());
+         iZone<settings.nPics;
          ++iZone)
      {
+        this->retrievePicture(iZone);
         ss.str("");
         ss.clear();
         ss << fileName << "_" << iZone << fileExt;
         std::ofstream tecFile;
         tecFile.open(ss.str());
+        std::cout << "\r" << std::flush;
+        std::cout << "  zone = " << iZone << std::flush;
         
         tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
          tecFile << "ZONE T=\"" << 1 <<
@@ -374,9 +343,10 @@ void PIV::Set::separateTecplotOutput(std::string fileName,
                                  << std::endl;
                      }
                  }
-        
+        this->removePicture(iZone); 
         tecFile.close();
      }
+     std::cout << std::endl;
 }
 
 void PIV::Set::tecplotOut(std::string fileName)
@@ -482,7 +452,7 @@ void PIV::Set::PIV_like_xcorr(char vxOrVort)
     this->removePicture(0);
     
     std::ofstream ofile;
-    ofile.open("tempXcoor.dat");
+    ofile.open("tempXcorr.dat");
     ofile << "VARIABLES = \"x\"  \"y\" \"uc\" \"vc\" \"val\"" << std::endl;
 
     std::cout << std::endl;
@@ -569,9 +539,338 @@ void PIV::Set::PIV_like_xcorr(char vxOrVort)
     ofile.close();
 }
 
+void PIV::Set::tempRetrievePict(int iPict, 
+                                std::vector<double>& vxVec,
+                                std::vector<double>& vyVec)
+{
+    std::stringstream dataset_name;
+    dataset_name << iPict+1 << "/F1/";
+    hsize_t dims[2];
+    auto type = PredType::NATIVE_DOUBLE;
+
+    DataSet dataset;
+    DataSpace dataspace;
+
+    //vx
+    dataset = file.openDataSet(dataset_name.str() + "vx");
+    dataspace = dataset.getSpace();
+    //this->type = this->dataset.getTypeClass();
+    dataspace.getSimpleExtentDims(dims, NULL);
+    vxVec.resize(dims[0]);
+    // TODO write type inference instead of just the macro
+    dataset.read(&(vxVec[0]), type, dataspace);
+    
+    //vy
+    dataset = file.openDataSet(dataset_name.str() + "vy");
+    dataspace = dataset.getSpace();
+    //this->type = this->dataset.getTypeClass();
+    dataspace.getSimpleExtentDims(dims, NULL);
+    vyVec.resize(dims[0]);
+    // TODO write type inference instead of just the macro
+    dataset.read(&(vyVec[0]), type, dataspace);
+}
+
+std::vector<double> PIV::Set::obtainTimeSeries(int tmin,
+                                               int tmax,
+                                               int index)
+{
+    std::vector<double> timeSeries(tmax-tmin+1, 0.0);
+    std::vector<double> vx;
+    std::vector<double> vy;
+    for (int t=tmin; t<=tmax; ++t)
+    {
+        this->tempRetrievePict(t, vx, vy);       
+        timeSeries[t] = vx[index];
+    }
+    return timeSeries;
+}
+
+std::vector<std::vector<float>> PIV::Set::preloadData(char variable, 
+                                int tmin, 
+                                int tmax)
+{
+    std::cout << "Loading data into memory..." << std::endl;
+    std::vector<std::vector<float>> data;
+    std::vector<double> tempVecvx;
+    std::vector<double> tempVecvy;
+    data.resize(tmax-tmin+1);
+    this->retrievePicture(0);
+    //std::cout << __LINE__ << std::endl;
+    int n = this->container[0].frames[0].n;
+    //this->removePicture(0);
+    //std::cout << __LINE__ << std::endl;
+    for (int t=tmin; t<=tmax; ++t)
+    {
+        data[t].resize(n);
+        //std::cout << __LINE__ << std::endl;
+        this->tempRetrievePict(t, tempVecvx, tempVecvy);
+    
+        switch (variable)
+        {
+            case 'v':
+                for (int i=0; i<n; ++i)
+                {
+                    data[t][i] = static_cast<float>(tempVecvx[i]);
+                }
+                break;
+
+            case 'w':
+                data[t] = this->calculateVorticity(tempVecvx, tempVecvy);
+                break;
+        }
+    }
+    std::cout << "  data loaded" << std::endl;
+
+    return data;
+
+}
+
+
+std::vector<float> PIV::Set::calculateVorticity(std::vector<double>& vx,
+                                                 std::vector<double>& vy)
+{
+    //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+    this->retrievePicture(0);
+    std::vector<float> vort(this->container[0].frames[0].x.size(), 0.0);
+
+    //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+    const double dx = std::abs(this->container[0].frames[0].x[1] - 
+                               this->container[0].frames[0].x[0]);
+    int nRows = this->container[0].frames[0].ny;
+    int nCols = this->container[0].frames[0].nx;
+    // variable for knowing if coords increase with index (+1) or 
+    // decrease (-1)
+    const int signx = (this->container[0].frames[0].x[1] -
+                        this->container[0].frames[0].x[0]>0.0? 1: -1);
+    const int signy = (this->container[0].frames[0].y[this->container[0].frames[0].nx]
+                        - this->container[0].frames[0].y[0]>0.0? 1: -1);
+
+    //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+    // this implementation uses the circulation way of calculating the
+    // vorticity
+    // C = \int \vec{u}\cdot d\vec{l} = \int_A \omega dA
+    double elemVort;
+    std::vector<int> locations;
+    for (int iElem=0; iElem < this->container[0].frames[0].ny-1; ++iElem)
+    {
+        for (int jElem=0; jElem < this->container[0].frames[0].nx-1; ++jElem)
+        {
+            //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+            elemVort = 0.0;
+            // side 11 (S)
+            elemVort += 0.5*(vx[cij(iElem + 1, jElem, nRows, nCols)] +
+                             vx[cij(iElem + 1, jElem+1, nRows, nCols)]) *
+                                    dx * signx;
+            
+            //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+            //std::cout << "n = " << nRows*nCols << std::endl;
+            //std::cout << "nCols = " << nCols << " nRows = " << nRows << std::endl;
+            //std::cout << "cij(iElem + 1, jElem + 1, nRows, nCols) = " <<
+                           //cij(iElem + 1, jElem + 1, nRows, nCols) << std::endl; 
+            //std::cout << "cij(iElem, jElem + 1, nRows, nCols) = " <<
+                           //cij(iElem, jElem + 1, nRows, nCols) << std::endl; 
+            //std::cout << "iElem = " << iElem << " jElem = " << jElem << std::endl;
+            //std::cout << "size(vy) = " << static_cast<int>(vy.size()) << std::endl;
+            //std::cout << "size(vx) = " << static_cast<int>(vx.size()) << std::endl;
+            // side 12 (E)
+            elemVort += 0.5*(vy[cij(iElem + 1, jElem + 1, nRows, nCols)] +
+                             vy[cij(iElem, jElem + 1, nRows, nCols)]) *
+                                    dx * signy;
+
+            //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+            // side 13 (N)
+            elemVort += -0.5*(vx[cij(iElem, jElem + 1, nRows, nCols)] +
+                              vx[cij(iElem, jElem, nRows, nCols)]) *
+                                    dx * signx;
+
+            //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+            // side 14 (W)
+            elemVort += -0.5*(vy[cij(iElem, jElem, nRows, nCols)] +
+                              vy[cij(iElem + 1, jElem, nRows, nCols)]) *
+                                    dx * signy;
+
+            //std::cout << "calculateVorticity: " << __LINE__ << std::endl;
+            // interpolation to the nodes based on if corner (1, 2, 3, 4),
+            // vertex (11, 12, 13, 14), or interior (-1)
+            locations = this->container[0].frames[0].determinePositions(iElem, jElem);
+            std::vector<double> coeffs(4, 0.25);
+            for (int iCoeff=0; iCoeff<4; ++iCoeff)
+            {
+                switch (locations[iCoeff])
+                {
+                    case -1:
+                        break;
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        coeffs[iCoeff] = 1.0;
+                        break;
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                        coeffs[iCoeff] = 0.5;
+                        break;
+                    default:
+                        std::cerr << "bad input in line" << __LINE__
+                                                     << std::endl;
+                }
+            }
+
+            // inserting the values in the vort matrix
+            // i+1,j
+            vort[cij(iElem+1, jElem, nRows, nCols)] += coeffs[0]*elemVort;
+            // i+1,j+1
+            vort[cij(iElem+1, jElem+1, nRows, nCols)] += coeffs[1]*elemVort;
+            // i,j+1
+            vort[cij(iElem, jElem+1, nRows, nCols)] += coeffs[2]*elemVort;
+            // i,j
+            vort[cij(iElem, jElem, nRows, nCols)] += coeffs[3]*elemVort;
+        }
+    }
+    this->removePicture(0);
+    return vort;
+}
+void PIV::Set::timeSeriesXcorr(char vOrVort)
+{
+    int wNy = settings.wNy;
+    int wNx = settings.wNx;
+    this->retrievePicture(0);
+    int nCols = this->container[0].frames[0].nx;
+    int nRows = this->container[0].frames[0].ny;
+
+    double dx = this->container[0].frames[0].x[0] -
+                this->container[0].frames[0].x[1];
+    std::vector<double> x = this->container[0].frames[0].x;
+    std::vector<double> y = this->container[0].frames[0].y;
+    this->removePicture(0);
+    
+    std::ofstream ofile;
+    ofile.open("timeSeriesXcorr.dat");
+    ofile << "VARIABLES = \"x\"  \"y\" \"uc\" \"vc\" \"val\"" << std::endl; 
+    std::cout << std::endl;
+    int xdisp;
+    int ydisp;
+    double xcorrVal;
+    double rms1;
+    double rms2;
+    std::vector<double> timeSeries1;
+    std::vector<double> timeSeries2;
+    int nElemsInXcorr = settings.nPics-settings.wNx;
+    std::vector<double> xdisps(nRows*nCols, 0.0);
+    std::vector<double> ydisps(nRows*nCols, 0.0);
+    std::vector<double> xcorrVals(nRows*nCols, 0.0);
+    std::vector<std::vector<float>> storage;
+    storage = this->preloadData(vOrVort, 0, nElemsInXcorr + settings.maxN);
+    for (int iStep=1; iStep<=settings.maxN; ++iStep)
+    {
+        ofile << "ZONE T=\"n=" << iStep << "\" I=" << nCols 
+              << " J=" << nRows << " DATAPACKING=POINT" << std::endl;
+        for (int i=0; i<nRows; ++i)
+        {
+            int imin = ((i-wNy < 0)? 0:i-wNy);
+            int imax = ((i+wNy >= nRows)? nRows-1:i+wNy);
+            std::cout << "\r" << std::flush;
+            std::cout << "n = " << iStep << "  pos = " << (i*1.0)/(nRows-1)
+                      << std::flush;
+            for (int j=0; j<nCols; ++j)
+            {
+                //std::cout << "n = " << iStep << "  pos="
+                          //<< static_cast<float>(ij(i,j,nRows,nCols))/(nRows*nCols)
+                          //<<  std::flush;
+                int jmin = ((j-wNx < 0)? 0:j-wNx);
+                int jmax = ((j+wNx >= nCols)? nCols-1:j+wNx);
+
+                xdisp = 0;
+                ydisp = 0;
+                xcorrVal = 0.0;
+                double maxXcorrVal = -1.0e10;
+
+                timeSeries1.clear();
+                timeSeries1.resize(nElemsInXcorr+1);
+                rms1 = 0.0;
+                for (int t=0; t<=nElemsInXcorr; ++t)
+                {
+                    timeSeries1[t] = storage[t][ij(i,j,nRows,nCols)];
+                    rms1 += timeSeries1[t]*timeSeries1[t];
+                }
+                rms1 = std::sqrt(rms1/(nElemsInXcorr+1));
+                // DEBUG
+                //if (std::abs(rms1) < 1.0e-6)
+                //{
+                    //std::cerr << __LINE__ << std::endl;
+                //}
+
+                for (int di=imin; di<=imax; ++di)
+                {
+                    for (int dj=jmin; dj<=jmax; ++dj)
+                    {
+                        //timeSeries1 = this->obtainTimeSeries(0, nElemsInXcorr,
+                                                 //ij(i,j,nRows,nCols));
+                        //timeSeries2 = this->obtainTimeSeries(0+iStep,
+                                                //nElemsInXcorr,
+                                                //ij(di,dj,nRows,nCols));
+                        timeSeries2.clear();
+                        timeSeries2.resize(nElemsInXcorr+1);
+                        rms2 = 0.0;
+                        xcorrVal = 0.0;
+                        for (int t=0; t<=nElemsInXcorr; ++t)
+                        {
+                            timeSeries2[t] = storage[t+iStep][ij(di,dj,nRows,nCols)];
+
+                            rms2 += timeSeries2[t]*timeSeries2[t];
+                            //if (std::abs(rms2) < 1.0e-6)
+                            //{
+                                //std::cerr << storage[t+iStep][ij(di,dj,nRows,nCols)] << std::endl;
+                                //std::cerr << __LINE__ << std::endl;
+                            //}
+                        }
+                        rms2 = std::sqrt(rms2/(nElemsInXcorr+1));
+                        //if (std::abs(rms2) < 1.0e-6)
+                        //{
+                            //std::cerr << __LINE__ << std::endl;
+                        //}
+                        //double div = rms1*rms2*(nElemsInXcorr+1);
+                        //if (std::abs(div) < 1.0e-6)
+                        //{
+                            //std::cerr << __LINE__ << std::endl;
+                        //}
+                        for (int t=0; t<=nElemsInXcorr; ++t)
+                        {
+                            xcorrVal += (timeSeries1[t] * timeSeries2[t])/(rms1*rms2);
+                        }
+
+                        if (xcorrVal > maxXcorrVal)
+                        {
+                            maxXcorrVal = xcorrVal;
+                            xdisp = dj;
+                            ydisp = di;
+                        }
+                    }
+                }
+                xdisps[ij(i,j, nRows, nCols)] = j-xdisp;
+                ydisps[ij(i,j, nRows, nCols)] = i-ydisp;
+                xcorrVals[ij(i,j, nRows, nCols)] = maxXcorrVal;
+            }
+        }
+        for (int i=0; i<nRows*nCols; ++i)
+        {
+            ofile << x[i] << "  "
+                  << y[i] << "  "
+                  << xdisps[i]/iStep << "  "
+                  << ydisps[i]/iStep << "  "
+                  << xcorrVals[i] << std::endl;
+        }
+        ofile << std::flush;
+    }
+    std::cout << std::endl;
+    ofile.close();
+    storage.clear();
+}
+
 void PIV::Set::timeXcorr()
 {
-    
     // TODO Ugly parameters
     int expon = 1;
     double offset = 0.0;

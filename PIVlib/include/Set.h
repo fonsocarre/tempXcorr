@@ -51,6 +51,9 @@ namespace PIV
         //~Set();
         
         void retrievePicture(int nPicture);
+        void tempRetrievePict(int iPict, 
+                            std::vector<double>& vxVec,
+                            std::vector<double>& vyVec);
         void removePicture(int nPicture);
         void insertPicture(PIV::Picture& pict);
         Set copyProperties();
@@ -71,6 +74,16 @@ namespace PIV
 
         void timeXcorr();
         void PIV_like_xcorr(char vxOrVort);
+        std::vector<double> obtainTimeSeries(int tmin,
+                                             int tmax,
+                                             int index);
+
+        void timeSeriesXcorr(char vOrVort);
+        std::vector<std::vector<float>> preloadData(char variable, 
+                                        int tmin, 
+                                        int tmax);
+        std::vector<float> calculateVorticity(std::vector<double>& vx,
+                                              std::vector<double>& vy);
     };
 }
 

@@ -31,8 +31,8 @@ Settings getSettings(const std::string settingsFile)
     
         output.inputFile = boost::lexical_cast<std::string>(pt.get<std::string>
                                                     ("Settings.inputFile"));
-    //    output.circOutFile = boost::lexical_cast<std::string>(pt.get<std::string>
-    //                                                ("Files.CirculationOutputFile"));
+        output.avgVelFile = boost::lexical_cast<std::string>(pt.get<std::string>
+                                                    ("Settings.avgVelFile"));
         output.nPicsForStitch = boost::lexical_cast<int>(pt.get<std::string>
                                                      ("Settings.nPicsForStitch"));
         output.nPics = boost::lexical_cast<int>(pt.get<std::string>

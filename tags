@@ -272,7 +272,7 @@ PIV	PIVlib/include/PIV_xcorr.h	/^namespace PIV$/;"	n
 PIV	PIVlib/include/Picture.h	/^namespace PIV$/;"	n
 PIV	PIVlib/include/Set.h	/^namespace PIV$/;"	n
 PIV_filter	PIVlib/include/PIV_filter.h	/^class PIV_filter$/;"	c
-PIV_like_xcorr	PIVlib/src/Set.cpp	/^void PIV::Set::PIV_like_xcorr()$/;"	f	class:PIV::Set
+PIV_like_xcorr	PIVlib/src/Set.cpp	/^void PIV::Set::PIV_like_xcorr(char vxOrVort)$/;"	f	class:PIV::Set
 PIV_xCorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine PIV_xCorr(/;"	s	module:xCorrModule
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	269;"	d	file:
 PLATFORM_ID	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	272;"	d	file:
@@ -382,10 +382,13 @@ Set	PIVlib/src/Set.cpp	/^PIV::Set::Set(std::string fileName): file(fileName, H5F
 Settings	PIVlib/include/getSettings.h	/^struct Settings {$/;"	s
 _USE_MATH_DEFINES	PIVlib/include/PIV_filter.h	5;"	d
 _USE_MATH_DEFINES	PIVlib/include/PIV_windows.h	7;"	d
+avgVelFile	PIVlib/include/getSettings.h	/^    std::string avgVelFile;$/;"	m	struct:Settings
 calculateAvgField	PIVlib/src/Set.cpp	/^PIV::Frame PIV::Set::calculateAvgField()$/;"	f	class:PIV::Set
 calculateVorticity	PIVlib/src/Frame.cpp	/^std::vector<double> PIV::Frame::calculateVorticity()$/;"	f	class:PIV::Frame
+calculateVorticity	PIVlib/src/Set.cpp	/^std::vector<float> PIV::Set::calculateVorticity(std::vector<double>& vx,$/;"	f	class:PIV::Set
 calculatexcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    function calculatexcorr(/;"	f	module:xCorrModule
 checkNaN	PIVlib/Stitchutils/src/interpolationModule.f90	/^function checkNaN(/;"	f	module:interpolationModule
+cij	PIVlib/include/PIV_xcorr.h	/^static inline int cij(int i, int j, int& nRows, int& nCols)$/;"	f
 closeFile	PIVlib/src/Set.cpp	/^void PIV::Set::closeFile()$/;"	f	class:PIV::Set
 container	PIVlib/include/Set.h	/^        std::map<int, PIV::Picture> container;$/;"	m	class:PIV::Set
 conv	PIVlib/Stitchutils/src/xCorrModule.f90	/^    function conv(/;"	f	module:xCorrModule
@@ -407,6 +410,7 @@ features	build/CMakeFiles/feature_tests.cxx	/^  const char features[] = {""$/;"	
 file	PIVlib/include/Set.h	/^        H5File file;$/;"	m	class:PIV::Set
 fileName	PIVlib/include/Set.h	/^        std::string fileName;$/;"	m	class:PIV::Set
 filter	PIVlib/src/spectral_filter.cpp	/^void spectral_filter::filter(std::vector<double> in,$/;"	f	class:spectral_filter
+filterAbsVelocity	src/PIV_functions.cpp	/^void filterAbsVelocity(PIV::Set& set)$/;"	f
 findWallLocation	PIVlib/src/Frame.cpp	/^int PIV::Frame::findWallLocation()$/;"	f	class:PIV::Frame
 frames	PIVlib/include/Picture.h	/^        std::vector<PIV::Frame> frames;$/;"	m	class:PIV::Picture
 getDisplacements	PIVlib/src/PIV_Stitch.cpp	/^std::vector<double> PIV::getDisplacements(std::vector<int> order,$/;"	f	class:PIV
@@ -435,6 +439,8 @@ insertPicture	PIVlib/src/Set.cpp	/^void PIV::Set::insertPicture(PIV::Picture& pi
 interpolate	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine interpolate(/;"	s	module:interpolationModule
 interpolationModule	PIVlib/Stitchutils/src/interpolationModule.f90	/^module interpolationModule$/;"	m
 interrSize	PIVlib/include/Set.h	/^        int interrSize;$/;"	m	class:PIV::Set
+intpow	PIVlib/include/PIV_xcorr.h	/^inline double intpow(double base)$/;"	f
+intpow	PIVlib/include/PIV_xcorr.h	/^inline double intpow<0>(double base)$/;"	f
 invertCoordinates	PIVlib/src/Picture.cpp	/^void PIV::Picture::invertCoordinates()$/;"	f	class:PIV::Picture
 isInside	PIVlib/Stitchutils/src/interpolationModule.f90	/^function isInside(/;"	f	module:interpolationModule
 loadedPictures	PIVlib/include/Set.h	/^        std::set<int> loadedPictures;$/;"	m	class:PIV::Set
@@ -464,15 +470,19 @@ nx	PIVlib/include/Frame.h	/^        int nx;$/;"	m	class:PIV::Frame
 nx	PIVlib/include/Set.h	/^        int nx;$/;"	m	class:PIV::Set
 ny	PIVlib/include/Frame.h	/^        int ny;$/;"	m	class:PIV::Frame
 ny	PIVlib/include/Set.h	/^        int ny;$/;"	m	class:PIV::Set
+obtainTimeSeries	PIVlib/src/Set.cpp	/^std::vector<double> PIV::Set::obtainTimeSeries(int tmin,$/;"	f	class:PIV::Set
 operator =	PIVlib/src/Frame.cpp	/^PIV::Frame& PIV::Frame::operator=(PIV::Frame &&other)$/;"	f	class:PIV::Frame
 operator =	PIVlib/src/Frame.cpp	/^PIV::Frame& PIV::Frame::operator=(const PIV::Frame &other)$/;"	f	class:PIV::Frame
 operator =	PIVlib/src/Picture.cpp	/^PIV::Picture& PIV::Picture::operator= (Picture&& other)$/;"	f	class:PIV::Picture
 outputAverageField	PIVlib/src/Set.cpp	/^void PIV::Set::outputAverageField(PIV::Frame avgFrame, std::string outFile)$/;"	f	class:PIV::Set
+outputAvgVelocityField	src/PIV_functions.cpp	/^void outputAvgVelocityField(PIV::Set& set)$/;"	f
 padding	PIVlib/include/getSettings.h	/^    int padding;$/;"	m	struct:Settings
 parallelStitch	PIVlib/src/PIV_Stitch.cpp	/^void PIV::parallelStitch(const std::vector<double> displacements,$/;"	f	class:PIV
 point_mat_xcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine point_mat_xcorr(/;"	s	module:xCorrModule
+preloadData	PIVlib/src/Set.cpp	/^std::vector<std::vector<float>> PIV::Set::preloadData(char variable, $/;"	f	class:PIV::Set
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
+readAvgVelocityField	src/PIV_functions.cpp	/^std::vector<std::vector<double>> readAvgVelocityField()$/;"	f
 removePadding	PIVlib/src/PIV_windows.cpp	/^fftw_complex* removePadding(fftw_complex* input, int nRows, int nCols,$/;"	f
 removePicture	PIVlib/src/Set.cpp	/^void PIV::Set::removePicture(int nPicture)$/;"	f	class:PIV::Set
 retrievePicture	PIVlib/src/Set.cpp	/^void PIV::Set::retrievePicture(int nPicture)$/;"	f	class:PIV::Set
@@ -487,11 +497,13 @@ stitchXcorrOffset	PIVlib/include/getSettings.h	/^    double stitchXcorrOffset;$/
 substractFrame	PIVlib/src/Picture.cpp	/^void PIV::Picture::substractFrame(PIV::Frame& avgF)$/;"	f	class:PIV::Picture
 t	PIVlib/include/Picture.h	/^        double t;$/;"	m	class:PIV::Picture
 tecplotOut	PIVlib/src/Set.cpp	/^void PIV::Set::tecplotOut(std::string fileName)$/;"	f	class:PIV::Set
+tempRetrievePict	PIVlib/src/Set.cpp	/^void PIV::Set::tempRetrievePict(int iPict, $/;"	f	class:PIV::Set
 tempXcorr	PIVlib/Stitchutils/src/xCorrModule.f90	/^    subroutine tempXcorr(/;"	s	module:xCorrModule
 tempXcorrMaxPict	PIVlib/include/getSettings.h	/^    int tempXcorrMaxPict;$/;"	m	struct:Settings
 tempXcorrMaxX	PIVlib/include/getSettings.h	/^    int tempXcorrMaxX;$/;"	m	struct:Settings
 tempXcorrMinPict	PIVlib/include/getSettings.h	/^    int tempXcorrMinPict;$/;"	m	struct:Settings
 tempXcorrn	PIVlib/include/getSettings.h	/^    int tempXcorrn;$/;"	m	struct:Settings
+timeSeriesXcorr	PIVlib/src/Set.cpp	/^void PIV::Set::timeSeriesXcorr(char vOrVort)$/;"	f	class:PIV::Set
 timeXcorr	PIVlib/src/Set.cpp	/^void PIV::Set::timeXcorr()$/;"	f	class:PIV::Set
 transferMesh1	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine transferMesh1(/;"	s	module:interpolationModule
 unload	PIVlib/src/Frame.cpp	/^void PIV::Frame::unload(H5::H5File& file, std::string groupName)$/;"	f	class:PIV::Frame

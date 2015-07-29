@@ -22,6 +22,7 @@ struct Settings {
     int nPics;
     int nThreads;
     std::string inputFile;
+    std::string avgVelFile;
     double stitchXcorrOffset;
     double xdisp;
     double ydisp;

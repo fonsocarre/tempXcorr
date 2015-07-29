@@ -74,7 +74,10 @@ void PIV::stitchPicture(const std::vector<double> displacements,
                            PIV::Set& stitched,
                            int iPic)
 {
+
     m.lock();
+        std::cout << "  Stitching picture iPic = " << iPic << " in line"
+                    << __LINE__ << std::endl;
         original.retrievePicture(iPic);
     m.unlock();
     
@@ -248,7 +251,7 @@ void PIV::stitchPicture(const std::vector<double> displacements,
     PIV::Picture newPict;
     newPict.frames.push_back(newFrame);
     newPict.nFrames = 1;
-    newPict.iPicture = iPic;
+    newPict.iPicture = iPic+1;
     
     m.lock();
         stitched.insertPicture(newPict);
