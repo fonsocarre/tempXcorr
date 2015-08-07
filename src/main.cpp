@@ -23,12 +23,16 @@ int main()
     //}
 
     //outputAvgVelocityField(set);
-    //set.outputAverageField(set.calculateAvgField(), "output.dat");
+    //set.outputAverageField(set.calculateAvgField(), "output_omd_saw_avg.dat");
     //filterAbsVelocity(set);
     set.timeSeriesXcorr('v');
 
+    //set.tecplotOut("completetec_omd_saw.dat");
+    //removeAvg(set);
 
 
+    //invertSet(set);
+    //trimSet(set);
 
 
     // FILTERING
@@ -79,8 +83,8 @@ int main()
     //set.separateTecplotOutput("/Volumes/SSD/Animation/tecplot_cyl_separated/cyl_output", ".dat");
     // 'v' for vx, 'w' for vorticity
     //set.PIV_like_xcorr('v');
-//    set.timeSeriesXcorr('w');
-    //set.tecplotOut("completetec_cyl.dat");
+    //set.timeSeriesXcorr('v');
+    //set.tecplotOut("completetec.dat");
     //set.vorticityTecplotOut("vorticityOut.dat");
 
     //========================INVERT COORDIN=========================
@@ -172,17 +176,19 @@ int main()
     //PIV::Set stitchedSet = set.copyProperties();
     //PIV::parallelStitch(displacements, set, stitchedSet, nPics);
         
-        // DEBUG
-        // Tecplot output
-    //    
+        //// DEBUG
+        //// Tecplot output
+    ////    
+        //std::cout << "Printing to tecplot file..." << std::endl << std::flush;
         //std::ofstream tecFile;
         //tecFile.open("tecFIle.dat");
         
         //tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
         //for (int iZone=0;
-             //iZone<static_cast<int>(stitchedSet.loadedPictures.size());
+             //iZone<settings.nPics;
              //++iZone)
              //{
+                 //stitchedSet.retrievePicture(iZone);
                  //tecFile << "ZONE T=\"" << iZone <<
                     //"\", I=" << stitchedSet.container[iZone].frames[0].nx;
                  //tecFile << " ,J=" << stitchedSet.container[iZone].frames[0].ny;
@@ -207,6 +213,7 @@ int main()
                                  //<< std::endl;
                      //}
                  //}
+                 //stitchedSet.removePicture(iZone);
              //}
         
         //tecFile.close();

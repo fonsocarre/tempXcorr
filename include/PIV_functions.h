@@ -14,3 +14,6 @@
 void outputAvgVelocityField(PIV::Set& set);
 std::vector<std::vector<double>> readAvgVelocityField();
 void filterAbsVelocity(PIV::Set& set);
+void removeAvg(PIV::Set& set);
+void invertSet(PIV::Set& set);
+void trimSet(PIV::Set& set);

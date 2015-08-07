@@ -427,3 +427,45 @@ std::vector<double> PIV::getFrameDisplacements(const PIV::Frame& frameL,
           &(colSize), &(rowSize), &(overlapSize), &(xdisp), &(ydisp), &(withInterpolation));
     return std::vector<double> {xdisp, ydisp};
 }
+
+//void PIV::timeXcorr(std::vector<double>& matL,
+               //std::vector<double>& matR,
+               //int nRows,
+               //int nCols,
+               //int overlapSize,
+               //double& xdisp,
+               //double& ydisp,
+               //bool withInterpolation)
+//{
+    //int nPoints = 10;
+    //int jPoint = nCols-overlapSize;
+    //int deltai = 5;
+    //int iminPoint = 5;
+    //int mdj = 40;
+    //int mdi = 20;
+
+    //xdisp = 0;
+    //ydisp = 0;
+
+    //for (int i = 0; i<nPoints; i++)
+    //{
+        //int iPoint = iminPoint + deltai*i;
+        //int imin = ((iPoint-mdi) < 0? 0: iPoint-mdi);
+        //int imax = ((iPoint+mdi) >= nRows? nRows: iPoint+mdi);
+        //int jmin = ((jPoint-mdj) < 0? 0: jPoint-mdi);
+        //int jmax = ((jPoint+mdj) >= nCols? nCols: iPoint+mdj);
+        //// min included, max not
+        ////
+        //int iiFound = 0;
+        //int jjFound = 0;
+        //double maxCorr = -1e10;
+        //for (int ii=imin; ii<imax; ++ii)
+        //{
+            //for (int jj=jmin; jj<jmax; ++jj)
+            //{
+                
+            //}
+        //}
+    //}
+
+//}

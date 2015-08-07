@@ -68,9 +68,9 @@ module xCorrModule
                 if (x1 <= 0) x1 = x3 + 1
                 if (x3 > overlap) x3 = x1 -1
 
-                y1 = log(corr(dispVec(1), x1)+offset)
-                y2 = log(corr(dispVec(1), x2)+offset)
-                y3 = log(corr(dispVec(1), x3)+offset)
+                y1 = (corr(dispVec(1), x1))
+                y2 = (corr(dispVec(1), x2))
+                y3 = (corr(dispVec(1), x3))
                 A = log(y3) - log(y1)
                 B = log(y2) - log(y1)
                 xdisp = (B*(x1**2 - x3**2) - A*(x1**2 - x2**2))/(2*A*(x2-x1) - 2*B*(x3-x1))
@@ -81,9 +81,9 @@ module xCorrModule
                 if (x1 <= 0) x1 = x3 + 1
                 if (x3 > nRows) x3 = x1 -1
 
-                y1 = log(corr(x1, dispVec(2))+offset)
-                y2 = log(corr(x2, dispVec(2))+offset)
-                y3 = log(corr(x3, dispVec(2))+offset)
+                y1 = (corr(x1, dispVec(2)))
+                y2 = (corr(x2, dispVec(2)))
+                y3 = (corr(x3, dispVec(2)))
                 A = log(y3) - log(y1)
                 B = log(y2) - log(y1)
                 ydisp = (B*(x1**2 - x3**2) - A*(x1**2 - x2**2))/(2*A*(x2-x1) - 2*B*(x3-x1))

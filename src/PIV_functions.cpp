@@ -123,3 +123,84 @@ void filterAbsVelocity(PIV::Set& set)
     std::cout << std::endl;
     filteredSet.closeFile();
 }
+
+
+void removeAvg(PIV::Set& set)
+{
+    PIV::Set flucSet = set.copyProperties(settings.inputFile + ".fluc.h5");
+    set.retrievePicture(0);
+    int n = set.container[0].frames[0].nx * 
+            set.container[0].frames[0].ny;
+    PIV::Frame avgFrame = set.calculateAvgField();
+    for (int iPict=0; iPict<settings.nPics; ++iPict)
+    {
+        set.retrievePicture(iPict);
+
+        for (int i=0; i<n; ++i)
+        {
+            set.container[iPict].frames[0].vx[i] -= avgFrame.vx[i];
+            set.container[iPict].frames[0].vy[i] -= avgFrame.vy[i];
+        }
+
+        flucSet.insertPicture(set.container[iPict]);
+        set.removePicture(iPict);
+        flucSet.unloadPicture(iPict);
+    }
+    flucSet.closeFile();
+}
+
+void invertSet(PIV::Set& set)
+{
+    //========================INVERT COORDIN=========================
+    PIV::Set invertedSet = set.copyProperties(settings.inputFile + 
+                                                ".inverted.h5");
+    int nPict = invertedSet.nPictures;
+    
+    for (int iPict=0; iPict<settings.nPics; ++iPict)
+    {
+        //std::cout << __LINE__ << std::flush << std::endl;
+        set.retrievePicture(iPict);
+        //std::cout << __LINE__ << std::flush << std::endl;
+        invertedSet.insertPicture(set.container[iPict]);
+        //std::cout << __LINE__ << std::flush << std::endl;
+        invertedSet.container[iPict].invertCoordinates();
+        //std::cout << __LINE__ << std::flush << std::endl;
+        invertedSet.unloadPicture(iPict);
+        //std::cout << __LINE__ << std::flush << std::endl;
+        //invertedSet.removePicture(iPict);
+        //std::cout << __LINE__ << std::flush << std::endl;
+        std::cout << "\r" << std::flush;
+        std::cout << "  progress: " << (iPict+1)/(nPict*0.01) << " %"
+                    << std::flush; 
+    }
+    std::cout << std::endl;
+    
+    invertedSet.closeFile();
+}
+void trimSet(PIV::Set& set)
+{
+    PIV::Frame avgFrame = set.calculateAvgField();
+    int wallLoc = avgFrame.findWallLocation();
+    
+    PIV::Set trimmedSet = set.copyProperties(settings.inputFile + 
+                                                ".trimmed.h5");
+     //for all picts
+    //int nPict = trimmedSet.nPictures;
+     //only for a few
+    int nPict = settings.nPics;
+    
+    
+    for (int iPict=0; iPict<nPict; ++iPict)
+    {
+        set.retrievePicture(iPict);
+        PIV::Picture tempPict;
+        set.container[iPict].cutFrames(wallLoc, tempPict);
+        trimmedSet.insertPicture(tempPict);
+        trimmedSet.unloadPicture(iPict);
+        //trimmedSet.removePicture(iPict);
+        std::cout << " " << std::flush;
+        std::cout << "\r" << std::flush;
+        std::cout << "  progress: " << (iPict+1)/(nPict*0.01) << " %";
+    }
+    std::cout << std::endl;
+}

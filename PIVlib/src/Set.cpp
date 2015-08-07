@@ -213,7 +213,7 @@ PIV::Frame PIV::Set::calculateAvgField()
     avgFrame.nx = 0;
     avgFrame.ny = 0;
     
-    for (int iPict=0; iPict<this->nPictures; ++iPict)
+    for (int iPict=0; iPict<settings.nPics; ++iPict)
     {
         this->retrievePicture(iPict);
         if (iPict == 0)
@@ -241,14 +241,14 @@ PIV::Frame PIV::Set::calculateAvgField()
         }
         
         this->removePicture(iPict);
-        std:: cout << "   progress: " << (iPict)/(this->nPictures*0.01) 
+        std:: cout << "   progress: " << (iPict)/(settings.nPics*0.01) 
         << std::endl;
     }
     
     for (int i=0; i<avgFrame.n; ++i)
     {
-        avgFrame.vx[i] /= this->nPictures;
-        avgFrame.vy[i] /= this->nPictures;
+        avgFrame.vx[i] /= settings.nPics;
+        avgFrame.vy[i] /= settings.nPics;
     }
 
     
@@ -354,6 +354,7 @@ void PIV::Set::tecplotOut(std::string fileName)
     std::ofstream tecFile;
     tecFile.open(fileName);
     
+    double dt = ((double) 1)/1400.;
     tecFile << "VARIABLES = \"X\" \"Y\" \"VX\" \"VY\"" << std::endl;
     std::cout << std::endl;
     for (int iZone=0;
@@ -361,10 +362,10 @@ void PIV::Set::tecplotOut(std::string fileName)
          ++iZone)
          {
              this->retrievePicture(iZone);
-             tecFile << "ZONE T=\"" << iZone <<
+             tecFile << "ZONE T=\"" << "DATA" <<
                 "\", I=" << this->container[iZone].frames[0].nx;
              tecFile << " ,J=" << this->container[iZone].frames[0].ny;
-             tecFile << " ,SOLUTIONTIME = " << iZone;
+             tecFile << " ,SOLUTIONTIME = " << iZone*dt;
              tecFile << " ,DATAPACKING = POINT" << std::endl;
              for (int j=0; j<this->container[iZone].frames[0].nx; ++j)
              {
@@ -750,8 +751,8 @@ void PIV::Set::timeSeriesXcorr(char vOrVort)
     ofile.open("timeSeriesXcorr.dat");
     ofile << "VARIABLES = \"x\"  \"y\" \"uc\" \"vc\" \"val\"" << std::endl; 
     std::cout << std::endl;
-    int xdisp;
-    int ydisp;
+    double xdisp;
+    double ydisp;
     double xcorrVal;
     double rms1;
     double rms2;
@@ -785,6 +786,8 @@ void PIV::Set::timeSeriesXcorr(char vOrVort)
                 xdisp = 0;
                 ydisp = 0;
                 xcorrVal = 0.0;
+                int iimax = 0;
+                int jjmax = 0;
                 double maxXcorrVal = -1.0e10;
 
                 timeSeries1.clear();
@@ -801,11 +804,17 @@ void PIV::Set::timeSeriesXcorr(char vOrVort)
                 //{
                     //std::cerr << __LINE__ << std::endl;
                 //}
-
+                int nnCols = imax-imin+1;
+                int nnRows = jmax-jmin+1;
+                std::vector<double> xcorrValVec(nnRows*nnCols, 0.0);
+                int ii = -1;
                 for (int di=imin; di<=imax; ++di)
                 {
+                    ++ii;
+                    int jj = -1;
                     for (int dj=jmin; dj<=jmax; ++dj)
                     {
+                        ++jj;
                         //timeSeries1 = this->obtainTimeSeries(0, nElemsInXcorr,
                                                  //ij(i,j,nRows,nCols));
                         //timeSeries2 = this->obtainTimeSeries(0+iStep,
@@ -840,15 +849,67 @@ void PIV::Set::timeSeriesXcorr(char vOrVort)
                         {
                             xcorrVal += (timeSeries1[t] * timeSeries2[t])/(rms1*rms2);
                         }
-
+                        xcorrValVec[ij(ii,jj,nnRows,nnCols)] = xcorrVal;
                         if (xcorrVal > maxXcorrVal)
                         {
                             maxXcorrVal = xcorrVal;
                             xdisp = dj;
                             ydisp = di;
+                            iimax = ii;
+                            jjmax = jj;
                         }
                     }
                 }
+                //// TODO add subpixel interpolation
+                //{
+                    //int x1 = xdisp;
+                    //int ii1 = iimax;
+                    ////if (ii1 == 0)
+                    ////{
+                        ////std::cerr << "ii == 0!!!" << std::endl;
+                        ////int temp;
+                        ////std::cin >> temp;
+                    ////}
+                    //// TODO safety for ii1 = 0 in ii2 and ii3
+                    //int x2;
+                    //int ii2;
+                    //if (ii1 == 0)
+                    //{
+                        //x2 = xdisp + 2;
+                        //ii2 = ii1 + 2;
+                    //} else
+                    //{
+                        //x2 = x1 - 1;
+                        //ii2 = ii1 - 1;
+                    //}
+
+                    //int x3;
+                    //int ii3;
+                    //if (x1 == nnRows-1)
+                    //{
+                        //x3 = xdisp - 2;
+                        //ii3 = ii1 - 2;
+                    //} else
+                    //{
+                        //x3 = x1 + 1;
+                        //ii3 = ii1 + 1;
+                    //}
+
+                    //int jj = jjmax;
+
+                    ////int y1 = ydisp;
+                    ////int y2 = (y1==0?ydisp+2:ydisp-1);
+                    ////int y3 = (y1==nRows?xdisp-2:ydisp+1);
+
+                    //double y1 = (xcorrValVec[ij(ii1, jj, nnRows, nnCols)]);
+                    //double y2 = (xcorrValVec[ij(ii2, jj, nnRows, nnCols)]);
+                    //double y3 = (xcorrValVec[ij(ii3, jj, nnRows, nnCols)]);
+
+                    //double A = std::log(y3) - std::log(y1);
+                    //double B = std::log(y2) - std::log(y1);
+                    //xdisp = (B*(x1*x1 - x3*x3) - A*(x1*x1 - x2*x2))/
+                                //(2*A*(x2-x1) - 2*B*(x3-x1));
+                //}
                 xdisps[ij(i,j, nRows, nCols)] = j-xdisp;
                 ydisps[ij(i,j, nRows, nCols)] = i-ydisp;
                 xcorrVals[ij(i,j, nRows, nCols)] = maxXcorrVal;

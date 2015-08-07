@@ -442,6 +442,7 @@ interrSize	PIVlib/include/Set.h	/^        int interrSize;$/;"	m	class:PIV::Set
 intpow	PIVlib/include/PIV_xcorr.h	/^inline double intpow(double base)$/;"	f
 intpow	PIVlib/include/PIV_xcorr.h	/^inline double intpow<0>(double base)$/;"	f
 invertCoordinates	PIVlib/src/Picture.cpp	/^void PIV::Picture::invertCoordinates()$/;"	f	class:PIV::Picture
+invertSet	src/PIV_functions.cpp	/^void invertSet(PIV::Set& set)$/;"	f
 isInside	PIVlib/Stitchutils/src/interpolationModule.f90	/^function isInside(/;"	f	module:interpolationModule
 loadedPictures	PIVlib/include/Set.h	/^        std::set<int> loadedPictures;$/;"	m	class:PIV::Set
 m	PIVlib/include/PIV_Stitch.h	/^static std::mutex m;$/;"	v
@@ -483,6 +484,7 @@ preloadData	PIVlib/src/Set.cpp	/^std::vector<std::vector<float>> PIV::Set::prelo
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdC/CMakeCCompilerId.c	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 qnxnto	build/CMakeFiles/3.2.2/CompilerIdCXX/CMakeCXXCompilerId.cpp	/^char const* qnxnto = "INFO" ":" "qnxnto[]";$/;"	v
 readAvgVelocityField	src/PIV_functions.cpp	/^std::vector<std::vector<double>> readAvgVelocityField()$/;"	f
+removeAvg	src/PIV_functions.cpp	/^void removeAvg(PIV::Set& set)$/;"	f
 removePadding	PIVlib/src/PIV_windows.cpp	/^fftw_complex* removePadding(fftw_complex* input, int nRows, int nCols,$/;"	f
 removePicture	PIVlib/src/Set.cpp	/^void PIV::Set::removePicture(int nPicture)$/;"	f	class:PIV::Set
 retrievePicture	PIVlib/src/Set.cpp	/^void PIV::Set::retrievePicture(int nPicture)$/;"	f	class:PIV::Set
@@ -506,6 +508,7 @@ tempXcorrn	PIVlib/include/getSettings.h	/^    int tempXcorrn;$/;"	m	struct:Setti
 timeSeriesXcorr	PIVlib/src/Set.cpp	/^void PIV::Set::timeSeriesXcorr(char vOrVort)$/;"	f	class:PIV::Set
 timeXcorr	PIVlib/src/Set.cpp	/^void PIV::Set::timeXcorr()$/;"	f	class:PIV::Set
 transferMesh1	PIVlib/Stitchutils/src/interpolationModule.f90	/^subroutine transferMesh1(/;"	s	module:interpolationModule
+trimSet	src/PIV_functions.cpp	/^void trimSet(PIV::Set& set)$/;"	f
 unload	PIVlib/src/Frame.cpp	/^void PIV::Frame::unload(H5::H5File& file, std::string groupName)$/;"	f	class:PIV::Frame
 unload	PIVlib/src/Picture.cpp	/^void PIV::Picture::unload(H5File& file, std::string groupName)$/;"	f	class:PIV::Picture
 unloadPicture	PIVlib/src/Set.cpp	/^void PIV::Set::unloadPicture(int iPict)$/;"	f	class:PIV::Set
