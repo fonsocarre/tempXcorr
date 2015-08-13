@@ -204,3 +204,82 @@ void trimSet(PIV::Set& set)
     }
     std::cout << std::endl;
 }
+
+void substractSets(PIV::Set& set1, 
+                   PIV::Set& set2,
+                   bool tecplotOutput,
+                   bool hdf5output)
+{
+    PIV::Set newSet;
+    if (hdf5output)
+    {
+        newSet = set1.copyProperties(settings.inputFile + ".diff.h5");
+    }
+
+
+    std::ofstream tecFile;
+    if (tecplotOutput)
+    {
+        tecFile.open("diffSet.dat");
+        tecFile << "VARIABLES = \"x\" \"y\" \"vx\" \"vy\"" << std::endl;
+    }
+
+    set1.retrievePicture(0);
+    int nx = set1.container[0].frames[0].nx;
+    int ny = set1.container[0].frames[0].ny;
+    int n = nx*ny;
+    set1.removePicture(0);
+
+    for (int iFrame=0; iFrame<settings.nPics; ++iFrame)
+    {
+        set1.retrievePicture(iFrame);
+        set2.retrievePicture(iFrame);
+        
+        for (int i=0; i<n; ++i)
+        {
+            set1.container[iFrame].frames[0].vx[i] -=
+                set2.container[iFrame].frames[0].vx[i];
+            set1.container[iFrame].frames[0].vy[i] -=
+                set2.container[iFrame].frames[0].vy[i];
+        }
+
+
+        if (tecplotOutput)
+        {
+            tecFile << "ZONE T=\"difference\" I="
+                    << nx
+                    << " J=" << ny
+                    << " DATAPACKING=POINT" 
+                    << " SOLUTIONTIME=" << iFrame/((double)1400.)
+                    << std::endl;
+
+            for (int i=0; i<n; ++i)
+            {
+                tecFile << set1.container[iFrame].frames[0].x[i] << "  "
+                        << set1.container[iFrame].frames[0].y[i] << "  "
+                        << set1.container[iFrame].frames[0].vx[i] << "  "
+                        << set1.container[iFrame].frames[0].vy[i] << "  "
+                        << std::endl;
+            }
+        }
+
+        if (hdf5output)
+        {
+            newSet.insertPicture(set1.container[iFrame]);
+            newSet.unloadPicture(iFrame);
+        }
+
+        set1.removePicture(iFrame);
+        set2.removePicture(iFrame);
+    }
+
+    if (hdf5output)
+    {
+        newSet.closeFile();
+    }
+
+    if (tecplotOutput)
+    {
+        tecFile.close();
+    }
+}

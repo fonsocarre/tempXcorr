@@ -76,7 +76,7 @@ void PIV::stitchPicture(const std::vector<double> displacements,
 {
 
     m.lock();
-        std::cout << "  Stitching picture iPic = " << iPic << " in line"
+        std::cout << "  Stitching picture iPic = " << iPic << " in line "
                     << __LINE__ << std::endl;
         original.retrievePicture(iPic);
     m.unlock();
@@ -255,13 +255,7 @@ void PIV::stitchPicture(const std::vector<double> displacements,
     
     m.lock();
         stitched.insertPicture(newPict);
-    m.unlock();
-    
-    m.lock();
         stitched.unloadPicture(iPic);
-    m.unlock();
-    
-    m.lock();
         original.removePicture(iPic);
     m.unlock();
 }
@@ -335,7 +329,7 @@ std::vector<double> PIV::getDisplacements(std::vector<int> order,
     }
     std::cout << std::endl;
     // find the mode
-    // TODO change to min_element and max_element
+    // TODO change to min_element and max_element, nor critical, only perf.
     int min1 = 100000;
     int max1 =-100000;
     int min2 = 100000;

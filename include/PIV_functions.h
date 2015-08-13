@@ -17,3 +17,7 @@ void filterAbsVelocity(PIV::Set& set);
 void removeAvg(PIV::Set& set);
 void invertSet(PIV::Set& set);
 void trimSet(PIV::Set& set);
+void substractSets(PIV::Set& set1, 
+                   PIV::Set& set2,
+                   bool tecplotOutput,
+                   bool hdf5ouput);
